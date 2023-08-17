@@ -6,6 +6,8 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 
+import java.util.Date;
+
 import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @Entity
@@ -26,6 +28,21 @@ public class UserRole extends CommonEntity implements GrantedAuthority
     @Column(name = "STATUS", nullable = false, length = 8)
     @Enumerated(EnumType.STRING)
     private Status statusCode;
+
+
+    @Column(name = "CREATED_USER", nullable = false, length = 64)
+    private String createdUser;
+
+    @Column(name = "LAST_UPDATED_USER", nullable = false, length = 64)
+    private String lastUpdatedUser;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "CREATED_TIME", nullable = false, length = 23)
+    private Date createdTime;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "LAST_UPDATED_TIME", nullable = false, length = 23)
+    private Date lastUpdatedTime;
 
     public UserRole() {
     }

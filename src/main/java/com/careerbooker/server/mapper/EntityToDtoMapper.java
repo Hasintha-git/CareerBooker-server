@@ -2,9 +2,12 @@ package com.careerbooker.server.mapper;
 
 
 import com.careerbooker.server.dto.SimpleBaseDTO;
+import com.careerbooker.server.dto.response.SpecializationResponseDTO;
 import com.careerbooker.server.dto.response.UserResponseDTO;
+import com.careerbooker.server.entity.SpecializationType;
 import com.careerbooker.server.entity.SystemUser;
 import com.careerbooker.server.entity.UserRole;
+import com.careerbooker.server.util.enums.ClientStatusEnum;
 
 import java.util.Objects;
 
@@ -42,4 +45,18 @@ public class EntityToDtoMapper {
         return simpleBaseDTO;
     }
 
+    public static SpecializationResponseDTO mapSpecialization(SpecializationType specializationType) {
+        SpecializationResponseDTO responseDTO = new SpecializationResponseDTO();
+        responseDTO.setStatus(String.valueOf(specializationType.getStatus()));
+        responseDTO.setStatusDescription(ClientStatusEnum.getEnum(String.valueOf(specializationType.getStatus())).getDescription());
+        responseDTO.setName(specializationType.getName());
+        responseDTO.setId(specializationType.getSpecializationId());
+        return responseDTO;
+    }
+
+    public static SimpleBaseDTO mapSpecializationDropdown(SimpleBaseDTO simpleBaseDTO, SpecializationType specializationType) {
+        simpleBaseDTO.setId(specializationType.getSpecializationId());
+        simpleBaseDTO.setDescription(specializationType.getName());
+        return simpleBaseDTO;
+    }
 }

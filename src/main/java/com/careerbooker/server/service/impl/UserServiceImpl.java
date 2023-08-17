@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserService {
 
             if (Objects.isNull(systemUser)) {
                 return responseGenerator.generateErrorResponse(userRequestDTO, HttpStatus.NOT_FOUND,
-                        ResponseCode.USER_GET_SUCCESS, MessageConstant.USER_NOT_FOUND, new
+                        ResponseCode.NOT_FOUND, MessageConstant.USER_NOT_FOUND, new
                                 Object[]{userRequestDTO.getId()},locale);
             }
 

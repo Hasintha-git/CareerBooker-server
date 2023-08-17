@@ -1,7 +1,9 @@
 package com.careerbooker.server.mapper;
 
 
+import com.careerbooker.server.dto.request.SpecializationDTO;
 import com.careerbooker.server.dto.request.UserRequestDTO;
+import com.careerbooker.server.entity.SpecializationType;
 import com.careerbooker.server.entity.SystemUser;
 import com.careerbooker.server.util.enums.Status;
 
@@ -26,4 +28,9 @@ public class DtoToEntityMapper {
         systemUser.setCity(userRequestDTO.getCity());
     }
 
+    public static void mapSpecialization(SpecializationType specializationType, SpecializationDTO specializationDTO) {
+        specializationType.setStatus(Status.valueOf(specializationDTO.getStatusCode()));
+        specializationType.setName(specializationDTO.getName());
+        specializationType.setSpecializationId(specializationDTO.getId());
+    }
 }

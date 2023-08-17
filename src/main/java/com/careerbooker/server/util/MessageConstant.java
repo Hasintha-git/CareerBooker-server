@@ -12,4 +12,10 @@ public class MessageConstant {
     public static final String USER_SUCCESSFULLY_SAVE = "val.user.success.save";
     public static final String USER_SUCCESSFULLY_UPDATE = "val.user.success.update";
     public static final String USER_SUCCESSFULLY_DELETE = "val.user.success.delete";
+    public static final String SPECIALIZATION_NOT_FOUND = "val.specialization.not.found";
+    public static final String SPECIALIZATION_ALREADY_EXIST = "val.specialization.already.exist";
+    public static final String SPECIALIZATION_SUCCESSFULLY_FIND = "val.specialization.success.find";
+    public static final String SPECIALIZATION_SUCCESSFULLY_SAVE = "val.specialization.success.save";
+    public static final String SPECIALIZATION_SUCCESSFULLY_UPDATE = "val.specialization.success.update";
+    public static final String SPECIALIZATION_SUCCESSFULLY_DELETE = "val.specialization.success.delete";
 }

@@ -71,6 +71,21 @@ public class SystemUser extends CommonEntity implements UserDetails {
     @Column(name = "PASSWORD_EXPIRE_DATE", length = 19)
     private Date passwordExpireDate;
 
+
+    @Column(name = "CREATED_USER", nullable = false, length = 64)
+    private String createdUser;
+
+    @Column(name = "LAST_UPDATED_USER", nullable = false, length = 64)
+    private String lastUpdatedUser;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "CREATED_TIME", nullable = false, length = 23)
+    private Date createdTime;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "LAST_UPDATED_TIME", nullable = false, length = 23)
+    private Date lastUpdatedTime;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         System.out.println("llllllllllllllllll");

@@ -13,16 +13,20 @@ import java.util.Date;
 public class CommonEntity
 {
 
-    @Column(name = "CREATED_USER", nullable = false, length = 64)
+    @Column(name = "createdDate", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdDate;
+
+    @Column(name = "createdUser", length = 255)
     private String createdUser;
-    @Column(name = "LAST_UPDATED_USER", nullable = false, length = 64)
-    private String lastUpdatedUser;
+
+    @Column(name = "modifiedDate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATED_TIME", nullable = false, length = 23)
-    private Date createdTime;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "LAST_UPDATED_TIME", nullable = false, length = 23)
-    private Date lastUpdatedTime;
+    private Date modifiedDate;
+
+    @Column(name = "modifiedUser", length = 255)
+    private String modifiedUser;
+
 
 
 }
