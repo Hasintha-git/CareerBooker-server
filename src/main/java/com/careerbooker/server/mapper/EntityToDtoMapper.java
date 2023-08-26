@@ -4,6 +4,7 @@ package com.careerbooker.server.mapper;
 import com.careerbooker.server.dto.SimpleBaseDTO;
 import com.careerbooker.server.dto.response.SpecializationResponseDTO;
 import com.careerbooker.server.dto.response.UserResponseDTO;
+import com.careerbooker.server.dto.response.UserRoleResponseDTO;
 import com.careerbooker.server.entity.SpecializationType;
 import com.careerbooker.server.entity.SystemUser;
 import com.careerbooker.server.entity.UserRole;
@@ -59,4 +60,15 @@ public class EntityToDtoMapper {
         simpleBaseDTO.setDescription(specializationType.getName());
         return simpleBaseDTO;
     }
+
+    public static UserRoleResponseDTO mapUserRole(UserRole userRole) {
+        UserRoleResponseDTO responseDTO = new UserRoleResponseDTO();
+        responseDTO.setStatus(String.valueOf(userRole.getStatusCode()));
+        responseDTO.setStatusDescription(ClientStatusEnum.getEnum(String.valueOf(userRole.getStatusCode())).getDescription());
+        responseDTO.setCode(userRole.getCode());
+        responseDTO.setDescription(userRole.getDescription());
+        responseDTO.setId(userRole.getId());
+        return responseDTO;
+    }
+
 }

@@ -12,4 +12,10 @@ public class EndPoint {
     public static final String SPECIALIZATION_REQUEST_FIND_ID = "/v1/admin/find-id";
     public static final String SPECIALIZATION_REQUEST_MGT = "/v1/admin";
     public static final String SPECIALIZATION_REQUEST_SEARCH_DATA = "/v1/admin/search-reference-data";
+
+    //    --------------------- USER ROLE ---------------------
+    public static final String USERROLE_REQUEST_FILTER_LIST = "/v1/admin/filter-list";
+    public static final String USERROLE_REQUEST_FIND_ID = "/v1/admin/find-id";
+    public static final String USERROLE_REQUEST_MGT = "/v1/admin";
+    public static final String USERROLE_REQUEST_SEARCH_DATA = "/v1/admin/search-reference-data";
 }

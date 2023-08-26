@@ -13,4 +13,9 @@ public class ResponseCode {
     public static final String SPECIALIZATION_UPDATE_SUCCESS = "007";
     public static final String SPECIALIZATION_DELETE_SUCCESS = "008";
 
+    public static final String USER_ROLE_GET_SUCCESS = "009";
+    public static final String USER_ROLE_SAVED_SUCCESS = "010";
+    public static final String USER_ROLE_UPDATE_SUCCESS = "011";
+    public static final String USER_ROLE_DELETE_SUCCESS = "012";
+
 }
