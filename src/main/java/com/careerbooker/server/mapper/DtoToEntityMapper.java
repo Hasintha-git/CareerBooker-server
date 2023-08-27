@@ -49,6 +49,5 @@ public class DtoToEntityMapper {
 
     public static void mapConsultant(Consultants consultants, ConsultantsDTO consultantsDTO) {
         consultants.setStatus(Status.valueOf(consultantsDTO.getStatus()));
-        consultants.setName(consultantsDTO.getName());
     }
 }

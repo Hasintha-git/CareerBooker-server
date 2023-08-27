@@ -78,9 +78,12 @@ public class EntityToDtoMapper {
         ConsultantResponseDTO responseDTO = new ConsultantResponseDTO();
         responseDTO.setStatus(String.valueOf(consultants.getStatus()));
         responseDTO.setStatusDescription(ClientStatusEnum.getEnum(String.valueOf(consultants.getStatus())).getDescription());
-        responseDTO.setName(consultants.getName());
-        responseDTO.setId(consultants.getConsultant_id());
+        responseDTO.setId(consultants.getConsultantId());
         responseDTO.setSpe_id(consultants.getSpecializations().getSpecializationId());
+        if (Objects.nonNull(consultants.getSystemUser())) {
+            UserResponseDTO userResponseDTO = mapUser(consultants.getSystemUser());
+            responseDTO.setUserResponseDTO(userResponseDTO);
+        }
         return responseDTO;
     }
 

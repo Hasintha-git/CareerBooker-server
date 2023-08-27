@@ -18,9 +18,13 @@ public class ConsultantSpecification {
         return (Specification<Consultants>) (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            if (Objects.nonNull(consultantSearchDTO.getName()) )
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(Consultants_.NAME)),  "%"
-                        .concat( consultantSearchDTO.getName()).concat("%")));
+            if (Objects.nonNull(consultantSearchDTO.getNic()) )
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(Consultants_.SYSTEM_USER).get(SystemUser_.NIC)),  "%"
+                        .concat( consultantSearchDTO.getNic()).concat("%")));
+
+            if (Objects.nonNull(consultantSearchDTO.getUserName()) )
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(Consultants_.SYSTEM_USER).get(SystemUser_.USERNAME)),  "%"
+                        .concat( consultantSearchDTO.getUserName()).concat("%")));
 
             if (Objects.nonNull(consultantSearchDTO.getSpe_id()) )
                 predicates.add(criteriaBuilder.equal(root.get(Consultants_.SPECIALIZATIONS).get(SpecializationType_.SPECIALIZATION_ID),

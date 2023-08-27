@@ -6,11 +6,13 @@ import com.careerbooker.server.dto.response.ConsultantResponseDTO;
 import com.careerbooker.server.dto.response.SpecializationResponseDTO;
 import com.careerbooker.server.entity.Consultants;
 import com.careerbooker.server.entity.SpecializationType;
+import com.careerbooker.server.entity.SystemUser;
 import com.careerbooker.server.mapper.DtoToEntityMapper;
 import com.careerbooker.server.mapper.EntityToDtoMapper;
 import com.careerbooker.server.mapper.ResponseGenerator;
 import com.careerbooker.server.repository.ConsultantRepository;
 import com.careerbooker.server.repository.SpecializationRepository;
+import com.careerbooker.server.repository.UserRepository;
 import com.careerbooker.server.repository.specifications.ConsultantSpecification;
 import com.careerbooker.server.repository.specifications.SpecializationSpecification;
 import com.careerbooker.server.service.ConsultantService;
@@ -44,6 +46,7 @@ public class ConsultantServiceImpl implements ConsultantService {
     private ModelMapper modelMapper;
     private ResponseGenerator responseGenerator;
     private SpecializationRepository specializationRepository;
+    private UserRepository userRepository;
 
     @Override
     @Transactional
@@ -119,7 +122,7 @@ public class ConsultantServiceImpl implements ConsultantService {
     @Transactional
     public ResponseEntity<Object> findConsultantById(ConsultantsDTO consultantsDTO, Locale locale) throws Exception {
         try {
-            Consultants consultants = Optional.ofNullable(consultantRepository.findByConsultant_idAndStatusNot(consultantsDTO.getCon_id(), Status.deleted)).orElse(
+            Consultants consultants = Optional.ofNullable(consultantRepository.findByConsultantIdAndStatusNot(consultantsDTO.getCon_id(), Status.deleted)).orElse(
                     null
             );
 
@@ -158,6 +161,16 @@ public class ConsultantServiceImpl implements ConsultantService {
                                 Object[]{consultantsDTO.getSpe_id()},locale);
             }
 
+            SystemUser user = Optional.ofNullable(userRepository.findByIdAndStatusNot(consultantsDTO.getUserId(), Status.deleted)).orElse(
+                    null
+            );
+
+            if (Objects.isNull(specializationType)) {
+                return responseGenerator.generateErrorResponse(consultantsDTO, HttpStatus.CONFLICT,
+                        ResponseCode.NOT_FOUND, MessageConstant.USER_NOT_FOUND, new
+                                Object[]{consultantsDTO.getUserId()},locale);
+            }
+
             Consultants consultants = new Consultants();
 
             DtoToEntityMapper.mapConsultant(consultants,consultantsDTO);
@@ -167,6 +180,7 @@ public class ConsultantServiceImpl implements ConsultantService {
             consultants.setModifiedUser(consultantsDTO.getLastUpdatedUser());
             consultants.setCreatedUser(consultantsDTO.getCreatedUser());
             consultants.setSpecializations(specializationType);
+            consultants.setSystemUser(user);
 
             consultantRepository.save(consultants);
 
@@ -186,7 +200,7 @@ public class ConsultantServiceImpl implements ConsultantService {
     @Transactional
     public ResponseEntity<Object> editConsultant(ConsultantsDTO consultantsDTO, Locale locale) {
         try {
-            Consultants consultants = Optional.ofNullable(consultantRepository.findByConsultant_idAndStatusNot(consultantsDTO.getCon_id(), Status.deleted)).orElse(null);
+            Consultants consultants = Optional.ofNullable(consultantRepository.findByConsultantIdAndStatusNot(consultantsDTO.getCon_id(), Status.deleted)).orElse(null);
 
             if (Objects.isNull(consultants)) {
                 return responseGenerator.generateErrorResponse(consultantsDTO, HttpStatus.CONFLICT,
@@ -205,9 +219,20 @@ public class ConsultantServiceImpl implements ConsultantService {
                                 Object[]{consultantsDTO.getSpe_id()},locale);
             }
 
-            consultants.setConsultant_id(specializationType.getSpecializationId());
+
+            SystemUser user = Optional.ofNullable(userRepository.findByIdAndStatusNot(consultantsDTO.getUserId(), Status.deleted)).orElse(
+                    null
+            );
+
+            if (Objects.isNull(specializationType)) {
+                return responseGenerator.generateErrorResponse(consultantsDTO, HttpStatus.CONFLICT,
+                        ResponseCode.NOT_FOUND, MessageConstant.USER_NOT_FOUND, new
+                                Object[]{consultantsDTO.getUserId()},locale);
+            }
+
+            consultants.setConsultantId(specializationType.getSpecializationId());
             consultants.setStatus(Status.valueOf(consultantsDTO.getStatus()));
-            consultants.setName(consultantsDTO.getName());
+            consultants.setSystemUser(user);
             consultants.setModifiedDate(new Date());
             consultants.setModifiedUser(consultantsDTO.getLastUpdatedUser());
 
@@ -229,7 +254,7 @@ public class ConsultantServiceImpl implements ConsultantService {
     @Transactional
     public ResponseEntity<Object> deleteConsultant(ConsultantsDTO consultantsDTO, Locale locale) {
         try {
-            Consultants consultants = Optional.ofNullable(consultantRepository.findByConsultant_idAndStatusNot(consultantsDTO.getCon_id(), Status.deleted)).orElse(null);
+            Consultants consultants = Optional.ofNullable(consultantRepository.findByConsultantIdAndStatusNot(consultantsDTO.getCon_id(), Status.deleted)).orElse(null);
 
             if (Objects.isNull(consultants)) {
                 return responseGenerator.generateErrorResponse(consultantsDTO, HttpStatus.CONFLICT,

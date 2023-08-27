@@ -18,10 +18,12 @@ public class Consultants extends CommonEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "consultant_id", unique = true, nullable = false)
-    private Long consultant_id;
+    private Long consultantId;
 
-    @Column(name = "name", nullable = false, unique = true, length = 64)
-    private String name;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private SystemUser systemUser;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "specialization_id", nullable = false)

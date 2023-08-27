@@ -29,9 +29,9 @@ public class Appointments extends CommonEntity {
     @JoinColumn(name = "slot_id", nullable = false)
     private TimeSlots slot;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "job_seeker_id", nullable = false)
-    private JobSeekers jobSeekers;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private SystemUser systemUser;
 
     @Column(name = "status", nullable = false, length = 20)
     @Enumerated(EnumType.STRING)

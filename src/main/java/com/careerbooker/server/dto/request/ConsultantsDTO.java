@@ -23,8 +23,8 @@ public class ConsultantsDTO {
             UpdateValidation.class })
     private Long con_id;
 
-    @NotBlank(message = "Consultant Name required", groups = {  InsertValidation.class, UpdateValidation.class })
-    private String name;
+    @NotNull(message = "User Id required", groups = {  InsertValidation.class, UpdateValidation.class })
+    private Long userId;
 
     @NotBlank(message = "Status required", groups = {  InsertValidation.class, UpdateValidation.class })
     private String status;

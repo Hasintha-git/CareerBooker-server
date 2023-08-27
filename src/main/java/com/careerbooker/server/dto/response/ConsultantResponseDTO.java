@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 public class ConsultantResponseDTO {
     private Long id;
     private Long spe_id;
-    private String name;
+    private UserResponseDTO userResponseDTO;
     private String status;
     private String statusDescription;
 
