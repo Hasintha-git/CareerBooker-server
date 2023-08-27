@@ -5,11 +5,13 @@ import com.careerbooker.server.dto.request.SpecializationDTO;
 import com.careerbooker.server.dto.request.UserRequestDTO;
 import com.careerbooker.server.dto.response.SpecializationResponseDTO;
 import com.careerbooker.server.dto.response.UserResponseDTO;
+import com.careerbooker.server.entity.Consultants;
 import com.careerbooker.server.entity.SpecializationType;
 import com.careerbooker.server.entity.SystemUser;
 import com.careerbooker.server.mapper.DtoToEntityMapper;
 import com.careerbooker.server.mapper.EntityToDtoMapper;
 import com.careerbooker.server.mapper.ResponseGenerator;
+import com.careerbooker.server.repository.ConsultantRepository;
 import com.careerbooker.server.repository.SpecializationRepository;
 import com.careerbooker.server.repository.specifications.SpecializationSpecification;
 import com.careerbooker.server.service.SpecializationService;
@@ -39,11 +41,11 @@ import java.util.stream.Stream;
 public class SpecializationServiceImpl implements SpecializationService {
 
     private SpecializationRepository specializationRepository;
+    private ConsultantRepository consultantRepository;
     private SpecializationSpecification specializationSpecification;
-
     private ModelMapper modelMapper;
-
     private ResponseGenerator responseGenerator;
+
     @Override
     @Transactional
     public Object getReferenceData() {
@@ -224,6 +226,15 @@ public class SpecializationServiceImpl implements SpecializationService {
                         ResponseCode.NOT_FOUND, MessageConstant.SPECIALIZATION_NOT_FOUND, new
                                 Object[]{specializationDTO.getId()},locale);
             }
+
+            Consultants consultants = Optional.ofNullable(consultantRepository.findBySpecializations_SpecializationIdAndStatusNot(specializationDTO.getId(), Status.deleted)).orElse(null);
+
+            if (Objects.nonNull(consultants)) {
+                return responseGenerator.generateErrorResponse(specializationDTO, HttpStatus.CONFLICT,
+                        ResponseCode.ALREADY_EXIST, MessageConstant.SPECIALIZATION_ALREADY_USED, new
+                                Object[]{specializationDTO.getId()},locale);
+            }
+
 
             specializationType.setStatus(Status.deleted);
 

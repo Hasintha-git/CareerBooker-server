@@ -21,4 +21,12 @@ public class MessageConstant {
     public static final String SPECIALIZATION_SUCCESSFULLY_SAVE = "val.specialization.success.save";
     public static final String SPECIALIZATION_SUCCESSFULLY_UPDATE = "val.specialization.success.update";
     public static final String SPECIALIZATION_SUCCESSFULLY_DELETE = "val.specialization.success.delete";
+
+    public static final String CONSULTANT_NOT_FOUND = "val.consultant.not.found";
+    public static final String CONSULTANT_ALREADY_EXIST = "val.consultant.already.exist";
+    public static final String SPECIALIZATION_ALREADY_USED = "val.spec.already.used";
+    public static final String CONSULTANT_SUCCESSFULLY_FIND = "val.consultant.success.find";
+    public static final String CONSULTANT_SUCCESSFULLY_SAVE = "val.consultant.success.save";
+    public static final String CONSULTANT_SUCCESSFULLY_UPDATE = "val.consultant.success.update";
+    public static final String CONSULTANT_SUCCESSFULLY_DELETE = "val.consultant.success.delete";
 }

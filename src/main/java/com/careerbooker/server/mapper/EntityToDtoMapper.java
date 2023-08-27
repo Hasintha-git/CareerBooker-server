@@ -2,9 +2,12 @@ package com.careerbooker.server.mapper;
 
 
 import com.careerbooker.server.dto.SimpleBaseDTO;
+import com.careerbooker.server.dto.request.ConsultantsDTO;
+import com.careerbooker.server.dto.response.ConsultantResponseDTO;
 import com.careerbooker.server.dto.response.SpecializationResponseDTO;
 import com.careerbooker.server.dto.response.UserResponseDTO;
 import com.careerbooker.server.dto.response.UserRoleResponseDTO;
+import com.careerbooker.server.entity.Consultants;
 import com.careerbooker.server.entity.SpecializationType;
 import com.careerbooker.server.entity.SystemUser;
 import com.careerbooker.server.entity.UserRole;
@@ -68,6 +71,16 @@ public class EntityToDtoMapper {
         responseDTO.setCode(userRole.getCode());
         responseDTO.setDescription(userRole.getDescription());
         responseDTO.setId(userRole.getId());
+        return responseDTO;
+    }
+
+    public static ConsultantResponseDTO mapConsultant(Consultants consultants) {
+        ConsultantResponseDTO responseDTO = new ConsultantResponseDTO();
+        responseDTO.setStatus(String.valueOf(consultants.getStatus()));
+        responseDTO.setStatusDescription(ClientStatusEnum.getEnum(String.valueOf(consultants.getStatus())).getDescription());
+        responseDTO.setName(consultants.getName());
+        responseDTO.setId(consultants.getConsultant_id());
+        responseDTO.setSpe_id(consultants.getSpecializations().getSpecializationId());
         return responseDTO;
     }
 

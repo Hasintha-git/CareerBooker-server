@@ -18,4 +18,9 @@ public class ResponseCode {
     public static final String USER_ROLE_UPDATE_SUCCESS = "011";
     public static final String USER_ROLE_DELETE_SUCCESS = "012";
 
+
+    public static final String CONSULTANT_GET_SUCCESS = "013";
+    public static final String CONSULTANT_SAVED_SUCCESS = "014";
+    public static final String CONSULTANT_UPDATE_SUCCESS = "015";
+    public static final String CONSULTANT_DELETE_SUCCESS = "016";
 }
