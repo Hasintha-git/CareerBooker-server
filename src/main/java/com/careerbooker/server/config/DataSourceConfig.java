@@ -11,15 +11,15 @@ import javax.sql.DataSource;
 @Configuration
 public class DataSourceConfig {
 
-    @Bean
-    public DataSource dataSource() {
-        return DataSourceBuilder.create()
-                .driverClassName("com.mysql.cj.jdbc.Driver")
-                .url("jdbc:mysql://localhost:3306/careerbooker")
-                .username("root")
-                .password("")
-                .build();
-    }
+//    @Bean
+//    public DataSource dataSource() {
+//        return DataSourceBuilder.create()
+//                .driverClassName("com.mysql.cj.jdbc.Driver")
+//                .url("jdbc:mysql://localhost:3306/careerbooker")
+//                .username("root")
+//                .password("")
+//                .build();
+//    }
 
     @Bean
     public WebMvcConfigurer corsConfigurer()

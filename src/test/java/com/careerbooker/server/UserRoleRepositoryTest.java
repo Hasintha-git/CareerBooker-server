@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 @DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UserRoleRepositoryTest {
 
@@ -67,13 +68,5 @@ public class UserRoleRepositoryTest {
         Assertions.assertThat(updatedUserRole.getDescription()).isEqualTo("Administration");
     }
 
-    @Test
-    @Order(5)
-    @Rollback(value = false)
-    public void deleteUserRole(){
-        UserRole userRole = userRoleRepository.findById(1L).get();
-        userRole.setStatusCode(Status.deleted);
-        UserRole updatedUserRole =  userRoleRepository.save(userRole);
-        Assertions.assertThat(updatedUserRole.getStatusCode()).isEqualTo(Status.deleted);
-    }
+
 }

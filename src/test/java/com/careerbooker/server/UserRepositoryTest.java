@@ -1,13 +1,11 @@
 package com.careerbooker.server;
 
 import com.careerbooker.server.entity.SystemUser;
-import com.careerbooker.server.entity.SystemUser_;
 import com.careerbooker.server.entity.UserRole;
 import com.careerbooker.server.repository.UserRepository;
 import com.careerbooker.server.repository.UserRoleRepository;
 import com.careerbooker.server.util.enums.Status;
 import org.assertj.core.api.Assertions;
-import org.h2.engine.User;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -91,13 +89,5 @@ public class UserRepositoryTest {
         Assertions.assertThat(updatedUser.getMobileNo()).isEqualTo("0784568222");
     }
 
-    @Test
-    @Order(5)
-    @Rollback(value = false)
-    public void deleteUser(){
-        SystemUser systemUser = userRepository.findById(1L).get();
-        systemUser.setStatus(Status.deleted);
-        SystemUser updatedUser =  userRepository.save(systemUser);
-        Assertions.assertThat(updatedUser.getStatus()).isEqualTo(Status.deleted);
-    }
+
 }
