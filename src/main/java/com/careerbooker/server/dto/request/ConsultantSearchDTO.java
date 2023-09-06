@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 public class ConsultantSearchDTO {
     private String nic;
 
-    private String userName;
+    private String username;
 
-    private String spe_id;
+    private Long spe_id;
 
-    private String statusCode;
+    private String status;
 }

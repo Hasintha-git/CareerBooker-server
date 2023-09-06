@@ -1,6 +1,7 @@
 package com.careerbooker.server.controller;
 
 import com.careerbooker.server.dto.request.UserRequestDTO;
+import com.careerbooker.server.dto.request.UserRequestSearchDTO;
 import com.careerbooker.server.service.UserService;
 import com.careerbooker.server.util.EndPoint;
 import com.careerbooker.server.validators.*;
@@ -14,11 +15,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Locale;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/user")
 @Log4j2
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200")
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class UserController {
 
@@ -29,21 +31,61 @@ public class UserController {
         log.debug("Received User Search Reference Data Request {} -");
         return ResponseEntity.status(HttpStatus.OK).body(userService.getReferenceData());
     }
-    @PostMapping(value = {EndPoint.USER_REQUEST_FILTER_LIST}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = {EndPoint.USER_REQUEST_FILTER_LIST}, produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
-    public ResponseEntity<Object> getUserFilteredList(@Validated({GetValidation.class})
-            @RequestBody UserRequestDTO userRequestDTO, Locale locale) throws Exception {
+    public ResponseEntity<Object> getUserFilteredList(
+            @RequestParam(required = false) Integer start,
+            @RequestParam(required = false) Integer limit,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String nic,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String userRole,
+            @RequestParam(required = false) String mobileNo,
+            @RequestParam(required = false) Boolean full,
+            @RequestParam(required = false) Boolean dataTable,
+            @RequestParam(required = false) Integer draw, Locale locale) throws Exception {
+
+        UserRequestDTO userRequestDTO = new UserRequestDTO();
+        UserRequestSearchDTO userRequestSearchDTO= new UserRequestSearchDTO();
+        userRequestSearchDTO.setUserName(username);
+        userRequestSearchDTO.setNic(nic);
+        userRequestSearchDTO.setEmail(email);
+        userRequestSearchDTO.setUserRole(userRole);
+        userRequestSearchDTO.setMobileNo(mobileNo);
+        userRequestSearchDTO.setStatus(status);
+
+        userRequestDTO.setUserRequestSearchDTO(userRequestSearchDTO);
+
+        userRequestDTO.setPageNumber(start);
+        userRequestDTO.setPageSize(limit);
+        userRequestDTO.setSortColumn(sortBy);
+        if (Objects.nonNull(order) && !order.isEmpty()) {
+            userRequestDTO.setSortDirection(order.toUpperCase());
+        }
         log.debug("Received User get Filtered List Request {} -", userRequestDTO);
-        return userService.getUserFilterList(userRequestDTO, locale);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getUserFilterList(userRequestDTO, locale));
     }
 
     @PostMapping(value = {EndPoint.USER_REQUEST_FIND_ID}, produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
-    public ResponseEntity<Object> findUser(@Validated({ FindValidation.class})
+    public ResponseEntity<Object> findUserById(@Validated({ FindValidation.class})
             @RequestBody UserRequestDTO userRequestDTO, Locale locale) throws Exception {
         log.debug("Received User find List Request {} -", userRequestDTO);
         return userService.findUserById(userRequestDTO, locale);
     }
+
+    @PostMapping(value = {EndPoint.USER_REQUEST_FIND_NIC}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<Object> findUserByNic(
+                                   @RequestBody UserRequestDTO userRequestDTO, Locale locale) throws Exception {
+        log.debug("Received User find Nic Request {} -", userRequestDTO);
+        return userService.findUserByNic(userRequestDTO, locale);
+    }
+
 
     @PostMapping(value = {EndPoint.USER_REQUEST_MGT}, produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")

@@ -1,9 +1,11 @@
 package com.careerbooker.server.util;
 
 public class MessageConstant {
+    public static final String PASSWORD_INCORRECT = "val.password.incorrect";
     public static final String SUCCESSFULLY_GET = "val.user.success.get";
     public static final String USER_NOT_FOUND = "val.user.not.found";
     public static final String USER_ROLE_NOT_FOUND = "val.user.role.not.found";
+    public static final String USER_ROLE_SAVE = "val.user.role.save";
     public static final String USER_ROLE_UPDATE = "val.user.role.update";
     public static final String USER_ROLE_DELETED = "val.user.role.deleted";
     public static final String USER_ROLE_ALREADY_EXIST = "val.user.role.already.existing";
@@ -23,10 +25,27 @@ public class MessageConstant {
     public static final String SPECIALIZATION_SUCCESSFULLY_DELETE = "val.specialization.success.delete";
 
     public static final String CONSULTANT_NOT_FOUND = "val.consultant.not.found";
+    public static final String CONSULTANT_UNAVAILABLE = "val.consultant.unavailable";
     public static final String CONSULTANT_ALREADY_EXIST = "val.consultant.already.exist";
     public static final String SPECIALIZATION_ALREADY_USED = "val.spec.already.used";
     public static final String CONSULTANT_SUCCESSFULLY_FIND = "val.consultant.success.find";
     public static final String CONSULTANT_SUCCESSFULLY_SAVE = "val.consultant.success.save";
     public static final String CONSULTANT_SUCCESSFULLY_UPDATE = "val.consultant.success.update";
     public static final String CONSULTANT_SUCCESSFULLY_DELETE = "val.consultant.success.delete";
+
+
+    public static final String CONSULTANT_DAYS_NOT_FOUND = "val.consultant.days.not.found";
+    public static final String CONSULTANT_DAYS_UNAVAILABLE = "val.consultant.day.unavailable";
+
+    public static final String CONSULTANT_DAYS_ALREADY_EXIST = "val.consultant.days.already.exist";
+    public static final String CONSULTANT_DAYS_SUCCESSFULLY_FIND = "val.consultant.days.success.find";
+    public static final String CONSULTANT_DAYS_SUCCESSFULLY_SAVE = "val.consultant.days.success.save";
+    public static final String CONSULTANT_DAYS_SUCCESSFULLY_UPDATE = "val.consultant.days.success.update";
+    public static final String CONSULTANT_DAYS_SUCCESSFULLY_DELETE = "val.consultant.days.success.delete";
+
+    public static final String APPOINTMENT_ALREADY_EXIST = "val.appointment.already.exist";
+    public static final String APPOINTMENT_SUCCESSFULLY_FIND = "val.appointment.success.find";
+    public static final String APPOINTMENT_SUCCESSFULLY_SAVE = "val.appointment.success.save";
+    public static final String APPOINTMENT_SUCCESSFULLY_UPDATE = "val.appointment.success.update";
+    public static final String APPOINTMENT_SUCCESSFULLY_DELETE = "val.appointment.success.delete";
 }

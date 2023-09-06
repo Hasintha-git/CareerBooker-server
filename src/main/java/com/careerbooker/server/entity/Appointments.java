@@ -9,7 +9,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
 @Entity
-@Table(name = "appoinments")
+@Table(name = "appointments")
 public class Appointments extends CommonEntity {
 
     @Id
@@ -18,16 +18,8 @@ public class Appointments extends CommonEntity {
     private Long appointmentId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "consultant_id", nullable = false)
-    private Consultants consultants;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "day_id", nullable = false)
-    private Days day;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "slot_id", nullable = false)
-    private TimeSlots slot;
+    @JoinColumn(name = "consultant_day_id", nullable = false)
+    private ConsultantDays consultantDays;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)

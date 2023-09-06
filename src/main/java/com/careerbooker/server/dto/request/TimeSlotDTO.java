@@ -16,19 +16,21 @@ import java.util.List;
 
 @NoArgsConstructor
 @Data
-public class ConsultantsDTO {
-    @NotNull(message = "Specialization id required", groups = {UpdateValidation.class })
-    private Long spe_id;
+public class TimeSlotDTO {
+
+    @NotNull(message = "Id required", groups = { FindValidation.class, DeleteValidation.class,
+            UpdateValidation.class })
+    private Long id;
 
     @NotNull(message = "Consultant id required", groups = { FindValidation.class, DeleteValidation.class,
             UpdateValidation.class })
     private Long con_id;
 
-    @NotNull(message = "User Id required", groups = {  InsertValidation.class, UpdateValidation.class })
-    private Long userId;
-
     @NotBlank(message = "Status required", groups = {  InsertValidation.class, UpdateValidation.class })
     private String status;
+
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Colombo")
+    private Date day;
 
     private List<SlotDto> slotDtoList;
 
@@ -47,5 +49,4 @@ public class ConsultantsDTO {
     private String sortColumn;
     private String sortDirection;
 
-    private ConsultantSearchDTO consultantSearchDTO;
 }

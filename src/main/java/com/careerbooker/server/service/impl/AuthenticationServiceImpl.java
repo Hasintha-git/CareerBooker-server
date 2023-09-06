@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -40,26 +41,27 @@ public class AuthenticationServiceImpl {
 
 
     public ResponseEntity<Object> loginUser(RegistrationDTO registrationDTO, Locale locale) {
-        try{
-            UsernamePasswordAuthenticationToken us = new UsernamePasswordAuthenticationToken(registrationDTO.getUsername(), registrationDTO.getPassword());
-            Authentication authentication= authenticationManager.authenticate(us);
-
-            String token = tokenServiceImpl.generateJwtToken(authentication);
-
-            SystemUser systemUser = Optional.ofNullable(userRepository.findByUsernameAndStatus(registrationDTO.getUsername(), Status.active)).orElse(
-                    null
-            );
+        try {
+            SystemUser systemUser = Optional.ofNullable(userRepository.findByUsernameAndStatus(registrationDTO.getUsername(), Status.active)).orElse(null);
 
             if (Objects.isNull(systemUser)) {
                 return responseGenerator.generateErrorResponse(registrationDTO, HttpStatus.NOT_FOUND,
-                        ResponseCode.USER_GET_SUCCESS, MessageConstant.USER_NOT_FOUND, new
-                                Object[]{registrationDTO.getUsername()},locale);
+                        ResponseCode.USER_GET_SUCCESS, MessageConstant.USER_NOT_FOUND, new Object[]{registrationDTO.getUsername()}, locale);
             }
+
+            UsernamePasswordAuthenticationToken us = new UsernamePasswordAuthenticationToken(registrationDTO.getUsername(), registrationDTO.getPassword());
+            Authentication authentication = authenticationManager.authenticate(us);
+
+            String token = tokenServiceImpl.generateJwtToken(authentication);
+
             LoginResponseDTO loginResponseDTO = new LoginResponseDTO(systemUser, token);
-            return responseGenerator
-                    .generateSuccessResponse(registrationDTO, HttpStatus.OK, ResponseCode.USER_GET_SUCCESS,
-                            MessageConstant.SUCCESSFULLY_GET, locale, loginResponseDTO);
-        }catch (AuthenticationException e) {
+            return responseGenerator.generateSuccessResponse(registrationDTO, HttpStatus.OK, ResponseCode.USER_GET_SUCCESS, MessageConstant.SUCCESSFULLY_GET, locale, loginResponseDTO);
+        } catch (BadCredentialsException e) {
+            // Handle incorrect password exception here
+            log.error("Incorrect password for user: " + registrationDTO.getUsername());
+            return responseGenerator.generateErrorResponse(registrationDTO, HttpStatus.UNAUTHORIZED,
+                    ResponseCode.PASSWORD_INCORRECT, MessageConstant.PASSWORD_INCORRECT, null, locale);
+        } catch (AuthenticationException e) {
             log.error(e.getMessage());
             throw e;
         }

@@ -9,7 +9,7 @@ import java.util.Locale;
 public interface ConsultantService {
 
     Object getReferenceData();
-    ResponseEntity<Object> getConsultantFilterList(ConsultantsDTO consultantsDTO, Locale locale) throws Exception;
+    Object getConsultantFilterList(ConsultantsDTO consultantsDTO, Locale locale) throws Exception;
 
     ResponseEntity<Object> findConsultantById(ConsultantsDTO consultantsDTO, Locale locale) throws Exception;
 

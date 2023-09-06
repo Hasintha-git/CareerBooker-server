@@ -18,7 +18,7 @@ public class CommonEntity
     private Date createdDate;
 
     @Column(name = "createdUser", length = 255)
-    private String createdUser;
+    private String  createdUser;
 
     @Column(name = "modifiedDate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)

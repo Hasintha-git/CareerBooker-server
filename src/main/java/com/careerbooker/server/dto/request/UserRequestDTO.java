@@ -40,7 +40,6 @@ public class UserRequestDTO {
     @NotBlank(message = "Mobile no required", groups = {  InsertValidation.class, UpdateValidation.class })
     private String mobileNo;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Colombo")
     private Date dateOfBirth;
 
     @NotBlank(message = "Address required", groups = {  InsertValidation.class, UpdateValidation.class })
@@ -50,7 +49,7 @@ public class UserRequestDTO {
     private String city;
 
     @NotBlank(message = "Status required", groups = {  InsertValidation.class, UpdateValidation.class })
-    private String statusCode;
+    private String status;
 
     private String pwStatus;
 
@@ -70,6 +69,9 @@ public class UserRequestDTO {
     private String createdUser;
 
     private String lastUpdatedUser;
+
+    @NotBlank(message = "Active User name required", groups = {  InsertValidation.class, UpdateValidation.class })
+    private String activeUserName;
 
     private int pageNumber;
     private int pageSize;

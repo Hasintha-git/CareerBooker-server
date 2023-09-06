@@ -1,25 +1,26 @@
 package com.careerbooker.server.service.impl;
 
+import com.careerbooker.server.dto.DataTableDTO;
 import com.careerbooker.server.dto.SimpleBaseDTO;
 import com.careerbooker.server.dto.request.ConsultantsDTO;
 import com.careerbooker.server.dto.response.ConsultantResponseDTO;
-import com.careerbooker.server.dto.response.SpecializationResponseDTO;
 import com.careerbooker.server.entity.Consultants;
 import com.careerbooker.server.entity.SpecializationType;
 import com.careerbooker.server.entity.SystemUser;
 import com.careerbooker.server.mapper.DtoToEntityMapper;
 import com.careerbooker.server.mapper.EntityToDtoMapper;
 import com.careerbooker.server.mapper.ResponseGenerator;
+import com.careerbooker.server.repository.ConsultantDaysRepository;
 import com.careerbooker.server.repository.ConsultantRepository;
 import com.careerbooker.server.repository.SpecializationRepository;
 import com.careerbooker.server.repository.UserRepository;
 import com.careerbooker.server.repository.specifications.ConsultantSpecification;
-import com.careerbooker.server.repository.specifications.SpecializationSpecification;
 import com.careerbooker.server.service.ConsultantService;
 import com.careerbooker.server.util.MessageConstant;
 import com.careerbooker.server.util.ResponseCode;
 import com.careerbooker.server.util.enums.ClientStatusEnum;
 import com.careerbooker.server.util.enums.Status;
+import com.careerbooker.server.util.enums.TimeSlot;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -46,6 +47,7 @@ public class ConsultantServiceImpl implements ConsultantService {
     private ModelMapper modelMapper;
     private ResponseGenerator responseGenerator;
     private SpecializationRepository specializationRepository;
+    private ConsultantDaysRepository consultantDaysRepository;
     private UserRepository userRepository;
 
     @Override
@@ -63,9 +65,13 @@ public class ConsultantServiceImpl implements ConsultantService {
                 return EntityToDtoMapper.mapSpecializationDropdown(simpleBaseDTO,specialization);
             }).collect(Collectors.toList());
 
+            List<SimpleBaseDTO> timeSlotList = Stream.of(TimeSlot.values()).map(statusEnum -> new SimpleBaseDTO(statusEnum.getCode(), statusEnum.getDescription())).collect(Collectors.toList());
+
+
             //set data
             refData.put("statusList", defaultStatus);
             refData.put("specializationList", simpleBaseDTOList);
+            refData.put("timeSlotList", timeSlotList);
 
             return refData;
 
@@ -77,7 +83,7 @@ public class ConsultantServiceImpl implements ConsultantService {
 
     @Override
     @Transactional
-    public ResponseEntity<Object> getConsultantFilterList(ConsultantsDTO consultantsDTO, Locale locale) throws Exception {
+    public Object getConsultantFilterList(ConsultantsDTO consultantsDTO, Locale locale) throws Exception {
         try {
             PageRequest pageRequest;
 
@@ -104,9 +110,10 @@ public class ConsultantServiceImpl implements ConsultantService {
                     .map(con -> EntityToDtoMapper.mapConsultant(con))
                     .collect(Collectors.toList());
 
-            return responseGenerator
-                    .generateSuccessResponse(consultantsDTO, HttpStatus.OK, ResponseCode.CONSULTANT_GET_SUCCESS
-                            , MessageConstant.SUCCESSFULLY_GET, locale, collect, fullCount);
+            return new DataTableDTO<>(fullCount, (long) collect.size(), collect, null);
+//            return responseGenerator
+//                    .generateSuccessResponse(consultantsDTO, HttpStatus.OK, ResponseCode.CONSULTANT_GET_SUCCESS
+//                            , MessageConstant.SUCCESSFULLY_GET, locale, collect, fullCount);
 
         } catch (EntityNotFoundException ex) {
             log.info(ex.getMessage());
@@ -224,15 +231,14 @@ public class ConsultantServiceImpl implements ConsultantService {
                     null
             );
 
-            if (Objects.isNull(specializationType)) {
+            if (Objects.isNull(user)) {
                 return responseGenerator.generateErrorResponse(consultantsDTO, HttpStatus.CONFLICT,
                         ResponseCode.NOT_FOUND, MessageConstant.USER_NOT_FOUND, new
                                 Object[]{consultantsDTO.getUserId()},locale);
             }
 
-            consultants.setConsultantId(specializationType.getSpecializationId());
+            consultants.setSpecializations(specializationType);
             consultants.setStatus(Status.valueOf(consultantsDTO.getStatus()));
-            consultants.setSystemUser(user);
             consultants.setModifiedDate(new Date());
             consultants.setModifiedUser(consultantsDTO.getLastUpdatedUser());
 
@@ -276,4 +282,6 @@ public class ConsultantServiceImpl implements ConsultantService {
             throw e;
         }
     }
+
+
 }

@@ -1,5 +1,6 @@
 package com.careerbooker.server.service.impl;
 
+import com.careerbooker.server.dto.DataTableDTO;
 import com.careerbooker.server.dto.SimpleBaseDTO;
 import com.careerbooker.server.dto.request.UserRequestDTO;
 import com.careerbooker.server.dto.response.UserResponseDTO;
@@ -79,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity<Object> getUserFilterList(UserRequestDTO userRequestDTO, Locale locale) throws Exception {
+    public Object getUserFilterList(UserRequestDTO userRequestDTO, Locale locale) throws Exception {
         try {
             PageRequest pageRequest;
 
@@ -103,12 +104,13 @@ public class UserServiceImpl implements UserService {
                     userRepository.count(userSpecification.generateSearchCriteria(userRequestDTO.getUserRequestSearchDTO()));
 
             List<UserResponseDTO> collect = faqList.stream()
-                    .map(faq -> modelMapper.map(faq, UserResponseDTO.class))
+                    .map(user -> EntityToDtoMapper.mapUser(user))
                     .collect(Collectors.toList());
 
-            return responseGenerator
-                    .generateSuccessResponse(userRequestDTO, HttpStatus.OK, ResponseCode.USER_GET_SUCCESS
-                            , MessageConstant.SUCCESSFULLY_GET, locale, collect, fullCount);
+            return new DataTableDTO<>(fullCount, (long) collect.size(), collect, null);
+//            return responseGenerator
+//                    .generateSuccessResponse(userRequestDTO, HttpStatus.OK, ResponseCode.USER_GET_SUCCESS
+//                            , MessageConstant.SUCCESSFULLY_GET, locale, collect, fullCount);
 
         } catch (EntityNotFoundException ex) {
             log.info(ex.getMessage());
@@ -135,7 +137,37 @@ public class UserServiceImpl implements UserService {
             }
 
             UserResponseDTO userResponseDTO = EntityToDtoMapper.mapUser(systemUser);
-            userResponseDTO.setUserRole(systemUser.getUserRole());
+            userResponseDTO.setUserRole(systemUser.getUserRole().getCode());
+            userResponseDTO.setUserRoleDescription(systemUser.getUserRole().getDescription());
+            return responseGenerator
+                    .generateSuccessResponse(userRequestDTO, HttpStatus.OK, ResponseCode.USER_GET_SUCCESS,
+                            MessageConstant.SUCCESSFULLY_GET, locale, userResponseDTO);
+        } catch (EntityNotFoundException ex) {
+            log.info(ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            throw ex;
+        }
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<Object> findUserByNic(UserRequestDTO userRequestDTO, Locale locale) throws Exception {
+        try {
+            SystemUser systemUser = Optional.ofNullable(userRepository.findByNicAndStatusNot(userRequestDTO.getNic(), Status.deleted)).orElse(
+                    null
+            );
+
+            if (Objects.isNull(systemUser)) {
+                return responseGenerator.generateErrorResponse(userRequestDTO, HttpStatus.NOT_FOUND,
+                        ResponseCode.NOT_FOUND, MessageConstant.USER_NOT_FOUND, new
+                                Object[]{userRequestDTO.getId()},locale);
+            }
+
+            UserResponseDTO userResponseDTO = EntityToDtoMapper.mapUser(systemUser);
+            userResponseDTO.setUserRole(systemUser.getUserRole().getCode());
+            userResponseDTO.setUserRoleDescription(systemUser.getUserRole().getDescription());
             return responseGenerator
                     .generateSuccessResponse(userRequestDTO, HttpStatus.OK, ResponseCode.USER_GET_SUCCESS,
                             MessageConstant.SUCCESSFULLY_GET, locale, userResponseDTO);
@@ -211,12 +243,12 @@ public class UserServiceImpl implements UserService {
 
             Date systemDate = new Date();
             modelMapper.map(userRequestDTO, systemUser);
-            systemUser.setStatus(Status.valueOf(userRequestDTO.getStatusCode()));
+            systemUser.setStatus(Status.valueOf(userRequestDTO.getStatus()));
             systemUser.setPwStatus(Status.active);
             systemUser.setPasswordExpireDate(systemDate);
             systemUser.setCreatedTime(systemDate);
-            systemUser.setCreatedUser(userRequestDTO.getCreatedUser());
-            systemUser.setLastUpdatedUser(userRequestDTO.getLastUpdatedUser());
+            systemUser.setCreatedUser(userRequestDTO.getActiveUserName());
+            systemUser.setLastUpdatedUser(userRequestDTO.getActiveUserName());
             systemUser.setLastUpdatedTime(systemDate);
             systemUser.setAttempt(0);
             systemUser.setUserRole(userRole);
@@ -298,9 +330,6 @@ public class UserServiceImpl implements UserService {
             Date systemDate = new Date();
             systemUser.setLastUpdatedTime(systemDate);
             systemUser.setUserRole(userRole);
-
-            String encode = passwordEncoder.encode(userRequestDTO.getPassword());
-            systemUser.setPassword(encode);
 
             DtoToEntityMapper.mapUser(systemUser, userRequestDTO);
 

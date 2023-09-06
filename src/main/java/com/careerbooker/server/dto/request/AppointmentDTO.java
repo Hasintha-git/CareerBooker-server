@@ -1,8 +1,5 @@
 package com.careerbooker.server.dto.request;
 
-import com.careerbooker.server.dto.SlotDto;
-import com.careerbooker.server.validators.DeleteValidation;
-import com.careerbooker.server.validators.FindValidation;
 import com.careerbooker.server.validators.InsertValidation;
 import com.careerbooker.server.validators.UpdateValidation;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -12,17 +9,15 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
 
 @NoArgsConstructor
 @Data
-public class ConsultantsDTO {
-    @NotNull(message = "Specialization id required", groups = {UpdateValidation.class })
-    private Long spe_id;
+public class AppointmentDTO {
+    @NotNull(message = "Appointment id required", groups = {UpdateValidation.class })
+    private Long appointmentId;
 
-    @NotNull(message = "Consultant id required", groups = { FindValidation.class, DeleteValidation.class,
-            UpdateValidation.class })
-    private Long con_id;
+    @NotNull(message = "Consultant id required", groups = { InsertValidation.class, UpdateValidation.class })
+    private Long consultantId;
 
     @NotNull(message = "User Id required", groups = {  InsertValidation.class, UpdateValidation.class })
     private Long userId;
@@ -30,7 +25,11 @@ public class ConsultantsDTO {
     @NotBlank(message = "Status required", groups = {  InsertValidation.class, UpdateValidation.class })
     private String status;
 
-    private List<SlotDto> slotDtoList;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Colombo")
+    private Date bookedDate;
+
+    @NotBlank(message = "Time slot required", groups = {  InsertValidation.class, UpdateValidation.class })
+    private String slotId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Colombo")
     private Date createdTime;
@@ -42,10 +41,13 @@ public class ConsultantsDTO {
 
     private String lastUpdatedUser;
 
+    @NotBlank(message = "Active User name required", groups = {  InsertValidation.class, UpdateValidation.class })
+    private String activeUserName;
+
     private int pageNumber;
     private int pageSize;
     private String sortColumn;
     private String sortDirection;
 
-    private ConsultantSearchDTO consultantSearchDTO;
+    private AppointmentSearchDTO appointmentSearchDTO;
 }

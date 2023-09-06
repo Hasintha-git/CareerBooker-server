@@ -6,7 +6,6 @@ public enum ClientStatusEnum
     ACTIVE("active", "Active"),
     INACTIVE("inactive", "Inactive"),
     PENDING("pending", "Pending"),
-    DELETED("deleted", "Deleted"),
     HOLD("hold", "Hold");
 
 

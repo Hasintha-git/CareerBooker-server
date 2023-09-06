@@ -1,10 +1,7 @@
 package com.careerbooker.server.controller;
 
 import com.careerbooker.server.dto.request.SpecializationDTO;
-import com.careerbooker.server.dto.request.UserRequestDTO;
 import com.careerbooker.server.service.SpecializationService;
-import com.careerbooker.server.service.UserService;
-import com.careerbooker.server.service.impl.SpecializationServiceImpl;
 import com.careerbooker.server.util.EndPoint;
 import com.careerbooker.server.validators.*;
 import lombok.AllArgsConstructor;

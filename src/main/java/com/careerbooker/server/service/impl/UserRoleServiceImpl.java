@@ -141,24 +141,25 @@ public class UserRoleServiceImpl implements UserRoleService {
                     null
             );
 
-            if (Objects.isNull(userRole)) {
+            if (Objects.nonNull(userRole)) {
                 return responseGenerator.generateErrorResponse(userRoleDTO, HttpStatus.NOT_FOUND,
-                        ResponseCode.NOT_FOUND, MessageConstant.USER_ROLE_NOT_FOUND, new
+                        ResponseCode.ALREADY_EXIST, MessageConstant.USER_ROLE_ALREADY_EXIST, new
                                 Object[]{userRoleDTO.getId()},locale);
             }
 
+            userRole = new UserRole();
             DtoToEntityMapper.mapUserRole(userRole,userRoleDTO);
             Date date = new Date();
-            userRole.setModifiedDate(date);
+            userRole.setLastUpdatedTime(date);
             userRole.setCreatedTime(date);
-            userRole.setModifiedUser(userRoleDTO.getLastUpdatedUser());
+            userRole.setLastUpdatedUser(userRoleDTO.getLastUpdatedUser());
             userRole.setCreatedUser(userRoleDTO.getLastUpdatedUser());
 
             userRoleRepository.save(userRole);
 
             return responseGenerator
-                    .generateSuccessResponse(userRoleDTO, HttpStatus.OK, ResponseCode.USER_ROLE_UPDATE_SUCCESS,
-                            MessageConstant.USER_ROLE_UPDATE, locale, userRoleDTO);
+                    .generateSuccessResponse(userRoleDTO, HttpStatus.OK, ResponseCode.USER_ROLE_SAVED_SUCCESS,
+                            MessageConstant.USER_ROLE_SAVE, locale, userRoleDTO);
         } catch (EntityNotFoundException ex) {
             log.info(ex.getMessage());
             throw ex;
@@ -182,16 +183,17 @@ public class UserRoleServiceImpl implements UserRoleService {
                                 Object[]{userRoleDTO.getCode()},locale);
             }
 
-            DtoToEntityMapper.mapUserRole(userRole,userRoleDTO);
+            userRole.setStatusCode(Status.valueOf(userRoleDTO.getStatus()));
+            userRole.setDescription(userRoleDTO.getDescription());
             Date date = new Date();
-            userRole.setModifiedDate(date);
-            userRole.setModifiedUser(userRoleDTO.getLastUpdatedUser());
+            userRole.setLastUpdatedTime(date);
+            userRole.setLastUpdatedUser(userRoleDTO.getLastUpdatedUser());
 
             userRoleRepository.save(userRole);
 
             return responseGenerator
-                    .generateSuccessResponse(userRoleDTO, HttpStatus.OK, ResponseCode.SPECIALIZATION_SAVED_SUCCESS,
-                            MessageConstant.SPECIALIZATION_SUCCESSFULLY_SAVE, locale, userRoleDTO);
+                    .generateSuccessResponse(userRoleDTO, HttpStatus.OK, ResponseCode.SPECIALIZATION_UPDATE_SUCCESS,
+                            MessageConstant.SPECIALIZATION_SUCCESSFULLY_UPDATE, locale, userRoleDTO);
         } catch (EntityNotFoundException ex) {
             log.info(ex.getMessage());
             throw ex;
@@ -205,7 +207,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Transactional
     public ResponseEntity<Object> deleteUserRole(UserRoleDTO userRoleDTO, Locale locale) {
         try {
-            UserRole userRole = Optional.ofNullable(userRoleRepository.findByCodeAndStatusCodeNot(userRoleDTO.getCode(), Status.deleted)).orElse(
+            UserRole userRole = Optional.ofNullable(userRoleRepository.findByIdAndStatusCodeNot(userRoleDTO.getId(), Status.deleted)).orElse(
                     null
             );
 

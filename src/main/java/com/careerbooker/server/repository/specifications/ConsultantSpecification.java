@@ -22,16 +22,16 @@ public class ConsultantSpecification {
                 predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(Consultants_.SYSTEM_USER).get(SystemUser_.NIC)),  "%"
                         .concat( consultantSearchDTO.getNic()).concat("%")));
 
-            if (Objects.nonNull(consultantSearchDTO.getUserName()) )
+            if (Objects.nonNull(consultantSearchDTO.getUsername()) )
                 predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(Consultants_.SYSTEM_USER).get(SystemUser_.USERNAME)),  "%"
-                        .concat( consultantSearchDTO.getUserName()).concat("%")));
+                        .concat( consultantSearchDTO.getUsername()).concat("%")));
 
             if (Objects.nonNull(consultantSearchDTO.getSpe_id()) )
                 predicates.add(criteriaBuilder.equal(root.get(Consultants_.SPECIALIZATIONS).get(SpecializationType_.SPECIALIZATION_ID),
                         consultantSearchDTO.getSpe_id()));
 
-            if (Objects.nonNull(consultantSearchDTO.getStatusCode()) && !consultantSearchDTO.getStatusCode().isEmpty())
-                predicates.add(criteriaBuilder.equal(root.get(Consultants_.STATUS), Status.valueOf(consultantSearchDTO.getStatusCode())));
+            if (Objects.nonNull(consultantSearchDTO.getStatus()) && !consultantSearchDTO.getStatus().isEmpty())
+                predicates.add(criteriaBuilder.equal(root.get(Consultants_.STATUS), Status.valueOf(consultantSearchDTO.getStatus())));
 
             predicates.add(criteriaBuilder.notEqual(root.get(Consultants_.STATUS), Status.deleted));
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

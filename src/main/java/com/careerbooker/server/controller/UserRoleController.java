@@ -1,8 +1,6 @@
 package com.careerbooker.server.controller;
 
-import com.careerbooker.server.dto.request.SpecializationDTO;
 import com.careerbooker.server.dto.request.UserRoleDTO;
-import com.careerbooker.server.service.SpecializationService;
 import com.careerbooker.server.service.UserRoleService;
 import com.careerbooker.server.util.EndPoint;
 import com.careerbooker.server.validators.*;

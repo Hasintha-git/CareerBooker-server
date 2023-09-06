@@ -5,10 +5,7 @@ import com.careerbooker.server.dto.request.ConsultantsDTO;
 import com.careerbooker.server.dto.request.SpecializationDTO;
 import com.careerbooker.server.dto.request.UserRequestDTO;
 import com.careerbooker.server.dto.request.UserRoleDTO;
-import com.careerbooker.server.entity.Consultants;
-import com.careerbooker.server.entity.SpecializationType;
-import com.careerbooker.server.entity.SystemUser;
-import com.careerbooker.server.entity.UserRole;
+import com.careerbooker.server.entity.*;
 import com.careerbooker.server.util.enums.Status;
 
 import java.util.Objects;
@@ -18,12 +15,12 @@ public class DtoToEntityMapper {
 
     }
     public static void mapUser(SystemUser systemUser, UserRequestDTO userRequestDTO) {
-        systemUser.setStatus(Status.valueOf(userRequestDTO.getStatusCode()));
+        systemUser.setStatus(Status.valueOf(userRequestDTO.getStatus()));
         systemUser.setPwStatus(Status.valueOf(userRequestDTO.getPwStatus()));
         if (Objects.nonNull(userRequestDTO.getPasswordExpireDate())) {
             systemUser.setPasswordExpireDate(userRequestDTO.getPasswordExpireDate());
         }
-        systemUser.setLastUpdatedUser(userRequestDTO.getLastUpdatedUser());
+        systemUser.setLastUpdatedUser(userRequestDTO.getActiveUserName());
         systemUser.setAttempt(0);
         systemUser.setEmail(userRequestDTO.getEmail());
         systemUser.setMobileNo(userRequestDTO.getMobileNo());
@@ -49,5 +46,12 @@ public class DtoToEntityMapper {
 
     public static void mapConsultant(Consultants consultants, ConsultantsDTO consultantsDTO) {
         consultants.setStatus(Status.valueOf(consultantsDTO.getStatus()));
+    }
+
+    public static Appointments mapAppoinment(ConsultantDays consultantDays, SystemUser systemUser) {
+        Appointments appointments= new Appointments();
+        appointments.setConsultantDays(consultantDays);
+        appointments.setSystemUser(systemUser);
+        return appointments;
     }
 }

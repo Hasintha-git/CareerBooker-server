@@ -3,17 +3,11 @@ package com.careerbooker.server.mapper;
 
 import com.careerbooker.server.dto.SimpleBaseDTO;
 import com.careerbooker.server.dto.request.ConsultantsDTO;
-import com.careerbooker.server.dto.response.ConsultantResponseDTO;
-import com.careerbooker.server.dto.response.SpecializationResponseDTO;
-import com.careerbooker.server.dto.response.UserResponseDTO;
-import com.careerbooker.server.dto.response.UserRoleResponseDTO;
-import com.careerbooker.server.entity.Consultants;
-import com.careerbooker.server.entity.SpecializationType;
-import com.careerbooker.server.entity.SystemUser;
-import com.careerbooker.server.entity.UserRole;
+import com.careerbooker.server.dto.response.*;
+import com.careerbooker.server.entity.*;
 import com.careerbooker.server.util.enums.ClientStatusEnum;
 
-import java.util.Objects;
+import java.util.*;
 
 public class EntityToDtoMapper {
     private EntityToDtoMapper() {
@@ -32,6 +26,8 @@ public class EntityToDtoMapper {
         userResponseDTO.setFullName(systemUser.getFullName());
         userResponseDTO.setMobileNo(systemUser.getMobileNo());
         userResponseDTO.setAddress(systemUser.getAddress());
+        userResponseDTO.setUserRole(systemUser.getUserRole().getCode());
+        userResponseDTO.setUserRoleDescription(systemUser.getUserRole().getDescription());
 
         if (Objects.nonNull(systemUser.getPasswordExpireDate())) {
             userResponseDTO.setPasswordExpireDate(systemUser.getPasswordExpireDate());
@@ -40,6 +36,24 @@ public class EntityToDtoMapper {
         if (Objects.nonNull(systemUser.getLastLoggedDate())) {
             userResponseDTO.setLastLoggedDate(systemUser.getLastLoggedDate());
         }
+
+        if (Objects.nonNull(systemUser.getCreatedUser())) {
+            userResponseDTO.setCreatedUser(systemUser.getCreatedUser());
+        }
+
+        if (Objects.nonNull(systemUser.getCreatedTime())) {
+            userResponseDTO.setCreatedTime(systemUser.getCreatedTime());
+        }
+
+        if (Objects.nonNull(systemUser.getLastUpdatedUser())) {
+            userResponseDTO.setLastUpdatedUser(systemUser.getLastUpdatedUser());
+        }
+
+        if (Objects.nonNull(systemUser.getLastUpdatedTime())) {
+            userResponseDTO.setLastUpdatedTime(systemUser.getLastUpdatedTime());
+        }
+
+
         return userResponseDTO;
     }
 
@@ -80,11 +94,64 @@ public class EntityToDtoMapper {
         responseDTO.setStatusDescription(ClientStatusEnum.getEnum(String.valueOf(consultants.getStatus())).getDescription());
         responseDTO.setId(consultants.getConsultantId());
         responseDTO.setSpe_id(consultants.getSpecializations().getSpecializationId());
+        responseDTO.setSpeDescription(consultants.getSpecializations().getName());
         if (Objects.nonNull(consultants.getSystemUser())) {
-            UserResponseDTO userResponseDTO = mapUser(consultants.getSystemUser());
-            responseDTO.setUserResponseDTO(userResponseDTO);
+            responseDTO.setUsername(consultants.getSystemUser().getUsername());
+            responseDTO.setEmail(consultants.getSystemUser().getEmail());
+            responseDTO.setStatus(String.valueOf(consultants.getSystemUser().getStatus()));
+            responseDTO.setCity(consultants.getSystemUser().getCity());
+            responseDTO.setNic(consultants.getSystemUser().getNic());
+            responseDTO.setDateOfBirth(consultants.getSystemUser().getDateOfBirth());
+            responseDTO.setFullName(consultants.getSystemUser().getFullName());
+            responseDTO.setMobileNo(consultants.getSystemUser().getMobileNo());
+            responseDTO.setAddress(consultants.getSystemUser().getAddress());
+            responseDTO.setUserRole(consultants.getSystemUser().getUserRole().getCode());
+            responseDTO.setUserRoleDescription(consultants.getSystemUser().getUserRole().getDescription());
+
         }
         return responseDTO;
     }
+
+    public static DaysList mapConsultantDays(List<ConsultantDays> consultantDays) {
+        DaysList daysList = new DaysList();
+
+        // Create a list to hold the day-slot pairs
+        List<DaysList.DaySlot> daySlots = new ArrayList<>();
+
+        for (ConsultantDays consultantDay : consultantDays) {
+            if (consultantDay.getDays() != null) {
+                Date date = consultantDay.getDays().getDate();
+                String slotCode = consultantDay.getSlot().getCode();
+
+                // Check if there is an existing DaySlot for this date
+                DaysList.DaySlot existingDaySlot = null;
+                for (DaysList.DaySlot daySlot : daySlots) {
+                    if (daySlot.getDay().equals(date)) {
+                        existingDaySlot = daySlot;
+                        break;
+                    }
+                }
+
+                // If there is an existing DaySlot, add the slotCode to it
+                if (existingDaySlot != null) {
+                    existingDaySlot.getSlot().add(slotCode);
+                } else {
+                    // Otherwise, create a new DaySlot and add it to the list
+                    DaysList.DaySlot newDaySlot = new DaysList.DaySlot();
+                    newDaySlot.setDay(date);
+                    newDaySlot.getSlot().add(slotCode);
+                    daySlots.add(newDaySlot);
+                }
+            }
+        }
+
+        // Set the generated daySlots list in the daysList object
+        daysList.setDaysLists(daySlots);
+
+        return daysList;
+    }
+
+
+
 
 }

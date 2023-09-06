@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "system_user")
-public class SystemUser extends CommonEntity implements UserDetails {
+public class SystemUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", unique = true, nullable = false)

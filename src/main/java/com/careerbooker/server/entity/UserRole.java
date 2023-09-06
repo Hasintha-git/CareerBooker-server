@@ -12,7 +12,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @Entity
 @Table(name = "user_role")
-public class UserRole extends CommonEntity implements GrantedAuthority
+public class UserRole implements GrantedAuthority
 {
     @Id
     @GeneratedValue(strategy = IDENTITY)
