@@ -11,14 +11,19 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.Date;
 import java.util.List;
 
-@DataJpaTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ComponentScan("com.careerbooker.server")
+@EntityScan("com.careerbooker.server.entity")
+@SpringBootTest
 public class DayRepositoryTest {
 
     @Autowired
@@ -42,8 +47,8 @@ public class DayRepositoryTest {
     @Test
     @Order(2)
     public void getDayById(){
-        Days days = dayRepository.findById(1L).get();
-        Assertions.assertThat(days.getDay_id()).isEqualTo(1L);
+        Days days = dayRepository.findById(5L).get();
+        Assertions.assertThat(days.getDay_id()).isEqualTo(5L);
     }
 
     @Test
@@ -57,7 +62,7 @@ public class DayRepositoryTest {
     @Order(4)
     @Rollback(value = false)
     public void updateDay(){
-        Days days = dayRepository.findById(1L).get();
+        Days days = dayRepository.findById(5L).get();
         days.setStatusCode(Status.hold);
         Days updatedDay =  dayRepository.save(days);
         Assertions.assertThat(updatedDay.getStatusCode()).isEqualTo(Status.hold);

@@ -11,31 +11,35 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.Date;
 import java.util.List;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ComponentScan("com.careerbooker.server")
+@EntityScan("com.careerbooker.server.entity")
+@SpringBootTest
 public class UserRepositoryTest {
 
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     UserRoleRepository userRoleRepository;
+    @Autowired
     private PasswordEncoder passwordEncoder;
     @Test
     @Order(1)
     @Rollback(value = false)
     public void saveAdminUser(){
 
-        UserRole userRole = userRoleRepository.findById(1L).get();
+        UserRole userRole = userRoleRepository.findById(8L).get();
 
         SystemUser user = new SystemUser();
         user.setUserRole(userRole);
@@ -61,6 +65,7 @@ public class UserRepositoryTest {
         user.setPasswordExpireDate(new Date());
 
         SystemUser savedUser = userRepository.save(user);
+        System.out.println(savedUser);
         Assertions.assertThat(savedUser).isNotNull();
         Assertions.assertThat(savedUser.getId()).isGreaterThan(0);
     }
@@ -68,8 +73,8 @@ public class UserRepositoryTest {
     @Test
     @Order(2)
     public void getAdminUserById(){
-        SystemUser systemUser = userRepository.findById(1L).get();
-        Assertions.assertThat(systemUser.getId()).isEqualTo(1L);
+        SystemUser systemUser = userRepository.findById(10L).get();
+        Assertions.assertThat(systemUser.getId()).isEqualTo(10L);
     }
 
     @Test
@@ -83,7 +88,7 @@ public class UserRepositoryTest {
     @Order(4)
     @Rollback(value = false)
     public void updateUser(){
-        SystemUser systemUser = userRepository.findById(1L).get();
+        SystemUser systemUser = userRepository.findById(10L).get();
         systemUser.setMobileNo("0784568222");
         SystemUser updatedUser =  userRepository.save(systemUser);
         Assertions.assertThat(updatedUser.getMobileNo()).isEqualTo("0784568222");

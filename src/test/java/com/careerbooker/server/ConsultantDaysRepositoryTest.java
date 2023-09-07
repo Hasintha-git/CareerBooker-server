@@ -10,22 +10,25 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.Date;
 import java.util.List;
 
-@DataJpaTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ComponentScan("com.careerbooker.server")
+@EntityScan("com.careerbooker.server.entity")
+@SpringBootTest
 public class ConsultantDaysRepositoryTest {
 
     @Autowired
     ConsultantRepository consultantRepository;
-
     @Autowired
     DayRepository dayRepository;
-
     @Autowired
     ConsultantDaysRepository consultantDaysRepository;
 
@@ -34,8 +37,8 @@ public class ConsultantDaysRepositoryTest {
     @Rollback(value = false)
     public void saveConsultantDays(){
 
-        Consultants consultants = consultantRepository.findById(1L).get();
-        Days days = dayRepository.findById(1L).get();
+        Consultants consultants = consultantRepository.findById(5L).get();
+        Days days = dayRepository.findById(5L).get();
         ConsultantDays consultantDays = new ConsultantDays();
         consultantDays.setDays(days);
         consultantDays.setConsultant(consultants);
@@ -56,8 +59,8 @@ public class ConsultantDaysRepositoryTest {
     @Test
     @Order(2)
     public void getConsultantDaysById(){
-        ConsultantDays consultantDays = consultantDaysRepository.findById(1L).get();
-        Assertions.assertThat(consultantDays.getId()).isEqualTo(1L);
+        ConsultantDays consultantDays = consultantDaysRepository.findById(9L).get();
+        Assertions.assertThat(consultantDays.getId()).isEqualTo(9L);
     }
 
     @Test
@@ -71,10 +74,10 @@ public class ConsultantDaysRepositoryTest {
     @Order(4)
     @Rollback(value = false)
     public void updateConsultantDays(){
-        ConsultantDays consultantDays = consultantDaysRepository.findById(1L).get();
+        ConsultantDays consultantDays = consultantDaysRepository.findById(9L).get();
         consultantDays.setSlot(TimeSlot.ONE);
         ConsultantDays updatedConsultantDays =  consultantDaysRepository.save(consultantDays);
-        Assertions.assertThat(updatedConsultantDays.getStatus()).isEqualTo(Status.booked);
+        Assertions.assertThat(updatedConsultantDays.getSlot()).isEqualTo(TimeSlot.ONE);
     }
 
 

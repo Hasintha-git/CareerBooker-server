@@ -178,6 +178,14 @@ public class ConsultantServiceImpl implements ConsultantService {
                                 Object[]{consultantsDTO.getUserId()},locale);
             }
 
+            List<Consultants> con = Optional.ofNullable(consultantRepository.findBySystemUserAndStatusNot(user, Status.deleted))
+                    .orElse(null);
+            if (Objects.nonNull(con)) {
+                return responseGenerator.generateErrorResponse(consultantsDTO, HttpStatus.CONFLICT,
+                        ResponseCode.ALREADY_EXIST, MessageConstant.CONSULTANT_ALREADY_EXIST, new
+                                Object[]{user.getUsername()},locale);
+            }
+
             Consultants consultants = new Consultants();
 
             DtoToEntityMapper.mapConsultant(consultants,consultantsDTO);
@@ -193,7 +201,7 @@ public class ConsultantServiceImpl implements ConsultantService {
 
             return responseGenerator
                     .generateSuccessResponse(consultantsDTO, HttpStatus.OK, ResponseCode.CONSULTANT_SAVED_SUCCESS,
-                            MessageConstant.SPECIALIZATION_SUCCESSFULLY_SAVE, locale, consultantsDTO);
+                            MessageConstant.SPECIALIZATION_SUCCESSFULLY_SAVE, locale, consultants.getConsultantId());
         } catch (EntityNotFoundException ex) {
             log.info(ex.getMessage());
             throw ex;

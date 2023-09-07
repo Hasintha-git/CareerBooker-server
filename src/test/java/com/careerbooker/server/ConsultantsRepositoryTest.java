@@ -11,22 +11,25 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.Date;
 import java.util.List;
 
-@DataJpaTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ComponentScan("com.careerbooker.server")
+@EntityScan("com.careerbooker.server.entity")
+@SpringBootTest
 public class ConsultantsRepositoryTest {
 
     @Autowired
     ConsultantRepository consultantRepository;
-
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     SpecializationRepository specializationRepository;
 
@@ -35,8 +38,8 @@ public class ConsultantsRepositoryTest {
     @Rollback(value = false)
     public void saveConsultant(){
 
-        SystemUser systemUser = userRepository.findById(1L).get();
-        SpecializationType specializationType = specializationRepository.findById(1L).get();
+        SystemUser systemUser = userRepository.findById(10L).get();
+        SpecializationType specializationType = specializationRepository.findById(5L).get();
         Consultants consultants = new Consultants();
         consultants.setSpecializations(specializationType);
         consultants.setSystemUser(systemUser);
@@ -56,8 +59,8 @@ public class ConsultantsRepositoryTest {
     @Test
     @Order(2)
     public void getConsultantById(){
-        Consultants consultants = consultantRepository.findById(1L).get();
-        Assertions.assertThat(consultants.getConsultantId()).isEqualTo(1L);
+        Consultants consultants = consultantRepository.findById(5L).get();
+        Assertions.assertThat(consultants.getConsultantId()).isEqualTo(5L);
     }
 
     @Test
@@ -71,7 +74,7 @@ public class ConsultantsRepositoryTest {
     @Order(4)
     @Rollback(value = false)
     public void updateConsultant(){
-        Consultants consultants = consultantRepository.findById(1L).get();
+        Consultants consultants = consultantRepository.findById(5L).get();
         consultants.setStatus(Status.booked);
         Consultants updatedConsultants =  consultantRepository.save(consultants);
         Assertions.assertThat(updatedConsultants.getStatus()).isEqualTo(Status.booked);

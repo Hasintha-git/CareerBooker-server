@@ -10,22 +10,25 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.Date;
 import java.util.List;
 
-@DataJpaTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ComponentScan("com.careerbooker.server")
+@EntityScan("com.careerbooker.server.entity")
+@SpringBootTest
 public class AppointmentRepositoryTest {
 
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     ConsultantDaysRepository consultantDaysRepository;
-
     @Autowired
     AppointmentRepository appointmentRepository;
 
@@ -34,8 +37,8 @@ public class AppointmentRepositoryTest {
     @Rollback(value = false)
     public void createAppointment(){
 
-        SystemUser user = userRepository.findById(1L).get();
-        ConsultantDays consultantDays = consultantDaysRepository.findById(1L).get();
+        SystemUser user = userRepository.findById(10L).get();
+        ConsultantDays consultantDays = consultantDaysRepository.findById(9L).get();
         Appointments appointments = new Appointments();
         appointments.setConsultantDays(consultantDays);
         appointments.setSystemUser(user);
@@ -55,8 +58,8 @@ public class AppointmentRepositoryTest {
     @Test
     @Order(2)
     public void getAppointmentById(){
-        Appointments appointments = appointmentRepository.findById(1L).get();
-        Assertions.assertThat(appointments.getAppointmentId()).isEqualTo(1L);
+        Appointments appointments = appointmentRepository.findById(3L).get();
+        Assertions.assertThat(appointments.getAppointmentId()).isEqualTo(3L);
     }
 
     @Test
