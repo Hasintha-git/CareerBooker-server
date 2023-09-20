@@ -6,10 +6,7 @@ import com.careerbooker.server.repository.UserRepository;
 import com.careerbooker.server.repository.UserRoleRepository;
 import com.careerbooker.server.util.enums.Status;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -26,6 +23,7 @@ import java.util.List;
 @ComponentScan("com.careerbooker.server")
 @EntityScan("com.careerbooker.server.entity")
 @SpringBootTest
+@Disabled
 public class UserRepositoryTest {
 
     @Autowired

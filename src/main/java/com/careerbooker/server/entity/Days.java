@@ -21,7 +21,7 @@ public class Days
 
     @Column(name = "day", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private Date day;
 
     @Column(name = "STATUS", nullable = false, length = 8)
     @Enumerated(EnumType.STRING)

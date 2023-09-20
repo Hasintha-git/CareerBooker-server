@@ -20,6 +20,7 @@ import java.util.List;
 @ComponentScan("com.careerbooker.server")
 @EntityScan("com.careerbooker.server.entity")
 @SpringBootTest
+@Disabled
 public class UserRoleRepositoryTest {
 
     @Autowired

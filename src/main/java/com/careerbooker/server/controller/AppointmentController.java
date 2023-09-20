@@ -46,8 +46,8 @@ public class AppointmentController {
             @RequestParam(required = false) Date date,
             @RequestParam(required = false) String consultantName,
             @RequestParam(required = false) Long spe_id,
-            @RequestParam(required = false) String userName,
-            @RequestParam(required = false) String slotIt,
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String slotId,
             @RequestParam(required = false) Boolean full,
             @RequestParam(required = false) Boolean dataTable,
             @RequestParam(required = false) Integer draw, Locale locale) throws Exception {
@@ -57,8 +57,8 @@ public class AppointmentController {
         appointmentSearchDTO.setConsultantName(consultantName);
         appointmentSearchDTO.setSpecialization(spe_id);
         appointmentSearchDTO.setBookedDate(date);
-        appointmentSearchDTO.setUserName(userName);
-        appointmentSearchDTO.setSlotId(slotIt);
+        appointmentSearchDTO.setUserName(username);
+        appointmentSearchDTO.setSlotId(slotId);
         appointmentSearchDTO.setStatus(status);
 
         appointmentDTO.setAppointmentSearchDTO(appointmentSearchDTO);

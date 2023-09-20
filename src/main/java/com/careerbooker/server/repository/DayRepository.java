@@ -10,5 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface DayRepository extends JpaRepository<Days, Long>, JpaSpecificationExecutor<Days> {
-    Days findByDate(Date date);
+    Days findByDay(Date date);
 }

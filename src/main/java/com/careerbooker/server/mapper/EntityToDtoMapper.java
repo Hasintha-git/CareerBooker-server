@@ -120,7 +120,7 @@ public class EntityToDtoMapper {
 
         for (ConsultantDays consultantDay : consultantDays) {
             if (consultantDay.getDays() != null) {
-                Date date = consultantDay.getDays().getDate();
+                Date date = consultantDay.getDays().getDay();
                 String slotCode = consultantDay.getSlot().getCode();
 
                 // Check if there is an existing DaySlot for this date
@@ -152,6 +152,20 @@ public class EntityToDtoMapper {
     }
 
 
+    public static AppointmentsResponseDTO mapAppointment(Appointments appointments) {
+        AppointmentsResponseDTO responseDTO = new AppointmentsResponseDTO();
+        responseDTO.setAppointmentId(appointments.getAppointmentId());
+        responseDTO.setConsultantDaysId(appointments.getConsultantDays().getId());
+        responseDTO.setConsultantId(appointments.getConsultantDays().getConsultant().getConsultantId());
+        responseDTO.setStatus(String.valueOf(appointments.getStatus()));
+        responseDTO.setStatusDescription(ClientStatusEnum.getEnum(String.valueOf(appointments.getStatus())).getDescription());
+        responseDTO.setBookedSlot(appointments.getConsultantDays().getSlot().getDescription());
+        responseDTO.setBookedDate(appointments.getConsultantDays().getDays().getDay());
+        responseDTO.setUserName(appointments.getSystemUser().getUsername());
+        responseDTO.setConsultantUserName(appointments.getConsultantDays().getConsultant().getSystemUser().getUsername());
+        responseDTO.setConsultantSpecialize(appointments.getConsultantDays().getConsultant().getSpecializations().getName());
 
+        return responseDTO;
+    }
 
 }

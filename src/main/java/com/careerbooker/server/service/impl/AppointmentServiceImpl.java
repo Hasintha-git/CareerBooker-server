@@ -1,15 +1,18 @@
 package com.careerbooker.server.service.impl;
 
+import com.careerbooker.server.dto.DataTableDTO;
 import com.careerbooker.server.dto.SimpleBaseDTO;
 import com.careerbooker.server.dto.request.AppointmentDTO;
 import com.careerbooker.server.dto.request.ConsultantsDTO;
 import com.careerbooker.server.dto.request.TimeSlotDTO;
+import com.careerbooker.server.dto.response.AppointmentsResponseDTO;
 import com.careerbooker.server.dto.response.ConsultantResponseDTO;
 import com.careerbooker.server.entity.*;
 import com.careerbooker.server.mapper.DtoToEntityMapper;
 import com.careerbooker.server.mapper.EntityToDtoMapper;
 import com.careerbooker.server.mapper.ResponseGenerator;
 import com.careerbooker.server.repository.*;
+import com.careerbooker.server.repository.specifications.AppointmentSpecification;
 import com.careerbooker.server.service.AppointmentService;
 import com.careerbooker.server.util.MessageConstant;
 import com.careerbooker.server.util.ResponseCode;
@@ -19,6 +22,8 @@ import com.careerbooker.server.util.enums.TimeSlot;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -35,6 +40,7 @@ import java.util.stream.Stream;
 public class AppointmentServiceImpl implements AppointmentService {
 
     private AppointmentRepository appointmentRepository;
+    private AppointmentSpecification appointmentSpecification;
     private ConsultantDaysRepository consultantDaysRepository;
     private ConsultantRepository consultantRepository;
     private UserRepository userRepository;
@@ -74,8 +80,46 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public ResponseEntity<Object> getAppointmentFilterList(AppointmentDTO appointmentDTO, Locale locale) throws Exception {
-        return null;
+    public Object getAppointmentFilterList(AppointmentDTO appointmentDTO, Locale locale) throws Exception {
+        try {
+            PageRequest pageRequest;
+
+            if (Objects.nonNull(appointmentDTO.getSortColumn()) && Objects.nonNull(appointmentDTO.getSortDirection()) &&
+                    !appointmentDTO.getSortColumn().isEmpty() && !appointmentDTO.getSortDirection().isEmpty()) {
+                pageRequest = PageRequest.of(
+                        appointmentDTO.getPageNumber(), appointmentDTO.getPageSize(),
+                        Sort.by(Sort.Direction.valueOf(appointmentDTO.getSortDirection()), appointmentDTO.getSortColumn())
+                );
+            }else{
+                pageRequest = PageRequest.of(appointmentDTO.getPageNumber(), appointmentDTO.getPageSize());
+            }
+
+            List<Appointments> appointmentsList = ((Objects.isNull(appointmentDTO.getAppointmentSearchDTO())) ? appointmentRepository.findAll
+                    (appointmentSpecification.generateSearchCriteria(Status.deleted), pageRequest) :
+                    appointmentRepository.findAll(appointmentSpecification.generateSearchCriteria(appointmentDTO.getAppointmentSearchDTO()), pageRequest))
+                    .getContent();
+
+            Long fullCount = (Objects.isNull(appointmentDTO.getAppointmentSearchDTO())) ? appointmentRepository.count
+                    (appointmentSpecification.generateSearchCriteria(Status.deleted)) :
+                    appointmentRepository.count(appointmentSpecification.generateSearchCriteria(appointmentDTO.getAppointmentSearchDTO()));
+
+            List<AppointmentsResponseDTO> collect = appointmentsList.stream()
+                    .map(con -> EntityToDtoMapper.mapAppointment(con))
+                    .collect(Collectors.toList());
+
+            return new DataTableDTO<>(fullCount, (long) collect.size(), collect, null);
+//            return responseGenerator
+//                    .generateSuccessResponse(consultantsDTO, HttpStatus.OK, ResponseCode.CONSULTANT_GET_SUCCESS
+//                            , MessageConstant.SUCCESSFULLY_GET, locale, collect, fullCount);
+
+        } catch (EntityNotFoundException ex) {
+            log.info(ex.getMessage());
+            throw ex;
+        }catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @Override
@@ -98,7 +142,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             System.out.println(consultants);
             System.out.println(appointmentDTO.getBookedDate());
             Days days = Optional.ofNullable(dayRepository
-                            .findByDate(appointmentDTO.getBookedDate()))
+                            .findByDay(appointmentDTO.getBookedDate()))
                     .orElseThrow(() -> new EntityNotFoundException(MessageConstant.CONSULTANT_DAYS_UNAVAILABLE));
 
 

@@ -126,12 +126,12 @@ public class ConsultantDaysServiceImpl implements ConsultantDaysService {
         try {
         Days days= new Days();
 
-        Days days1 = Optional.ofNullable(dayRepository.findByDate(date)).orElse(null);
+        Days days1 = Optional.ofNullable(dayRepository.findByDay(date)).orElse(null);
         if (Objects.nonNull(days1)) {
             return days1;
         }
         days.setStatusCode(Status.active);
-        days.setDate(date);
+        days.setDay(date);
         dayRepository.save(days);
         return days;
         } catch (Exception ex) {
@@ -156,7 +156,7 @@ public class ConsultantDaysServiceImpl implements ConsultantDaysService {
                                 Object[]{timeSlotDTO.getCon_id()}, locale);
             }
 
-            Days byDate = dayRepository.findByDate(timeSlotDTO.getDay());
+            Days byDate = dayRepository.findByDay(timeSlotDTO.getDay());
             List<ConsultantDays> consultantDays = Optional.ofNullable(consultantDaysRepository.findAllByConsultantAndDaysAndStatus
                     (consultants,byDate, Status.valueOf(timeSlotDTO.getStatus()))).orElse(null);
 
@@ -210,7 +210,7 @@ public class ConsultantDaysServiceImpl implements ConsultantDaysService {
 
                     Date day = timeSlotDTO.getSlotDtoList().get(i).getDay();
 
-                    Days byDate = dayRepository.findByDate(day);
+                    Days byDate = dayRepository.findByDay(day);
 
                     Long existingEntryCount = consultantDaysRepository.countAllByConsultantAndDaysAndSlotAndStatusNot(
                             consultants, byDate, timeSlot, Status.deleted);

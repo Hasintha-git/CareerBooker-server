@@ -10,7 +10,7 @@ import java.util.Locale;
 public interface AppointmentService {
 
     Object getReferenceData();
-    ResponseEntity<Object> getAppointmentFilterList(AppointmentDTO appointmentDTO, Locale locale) throws Exception;
+    Object getAppointmentFilterList(AppointmentDTO appointmentDTO, Locale locale) throws Exception;
 
     ResponseEntity<Object> findAppointmentById(AppointmentDTO appointmentDTO, Locale locale) throws Exception;
 
