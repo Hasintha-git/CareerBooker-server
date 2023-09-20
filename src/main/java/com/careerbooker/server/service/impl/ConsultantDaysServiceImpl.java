@@ -89,7 +89,7 @@ public class ConsultantDaysServiceImpl implements ConsultantDaysService {
             }
 
             List<ConsultantDays> consultantDays = Optional.ofNullable(consultantDaysRepository.findAllByConsultantAndStatus
-                    (consultants, Status.valueOf(timeSlotDTO.getStatus()))).orElse(null);
+                    (consultants, Status.active)).orElse(null);
 
             if (Objects.isNull(consultantDays) || consultantDays.size() == 0) {
                 return responseGenerator.generateErrorResponse(timeSlotDTO, HttpStatus.CONFLICT,
@@ -222,11 +222,11 @@ public class ConsultantDaysServiceImpl implements ConsultantDaysService {
 
 
                     ConsultantDays consultantDays = new ConsultantDays();
-                    consultantDays.setCreatedUser(timeSlotDTO.getCreatedUser());
+                    consultantDays.setCreatedUser(timeSlotDTO.getActiveUserName());
                     consultantDays.setCreatedDate(new Date());
                     consultantDays.setModifiedDate(new Date());
-                    consultantDays.setModifiedUser(timeSlotDTO.getLastUpdatedUser());
-                    consultantDays.setStatus(Status.valueOf(timeSlotDTO.getStatus()));
+                    consultantDays.setModifiedUser(timeSlotDTO.getActiveUserName());
+                    consultantDays.setStatus(Status.active);
                     consultantDays.setDays(days);
                     consultantDays.setConsultant(consultants);
                     consultantDays.setSlot(timeSlot);

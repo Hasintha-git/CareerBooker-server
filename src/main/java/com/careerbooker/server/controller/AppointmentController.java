@@ -30,12 +30,12 @@ public class AppointmentController {
 
     private AppointmentService appointmentService;
 
-    @GetMapping(value = EndPoint.CONSULTANT_REQUEST_SEARCH_DATA)
+    @GetMapping(value = EndPoint.APPOINTMENT_REQUEST_SEARCH_DATA)
     public ResponseEntity<Object> getReferenceData() {
-        log.debug("Received Appointment Search Reference Data Request {} -");
+        log.info("Received Appointment Search Reference Data Request {} -");
         return ResponseEntity.status(HttpStatus.OK).body(appointmentService.getReferenceData());
     }
-    @GetMapping(value = {EndPoint.CONSULTANT_REQUEST_FILTER_LIST}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = {EndPoint.APPOINTMENT_REQUEST_FILTER_LIST}, produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
     public ResponseEntity<Object> getAppointmentFilteredList(
             @RequestParam(required = false) Integer start,
@@ -69,7 +69,7 @@ public class AppointmentController {
         if (Objects.nonNull(order) && !order.isEmpty()) {
             appointmentDTO.setSortDirection(order.toUpperCase());
         }
-        log.debug("Received Appointment get Filtered List Request {} -", appointmentDTO);
+        log.info("Received Appointment get Filtered List Request {} -", appointmentDTO);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(appointmentService.getAppointmentFilterList(appointmentDTO, locale));
     }
@@ -78,11 +78,11 @@ public class AppointmentController {
     @CrossOrigin(origins = "*")
     public ResponseEntity<Object> findAppointment(@Validated({ FindValidation.class})
             @RequestBody AppointmentDTO appointmentDTO, Locale locale) throws Exception {
-        log.debug("Received Appointment find List Request {} -", appointmentDTO);
+        log.info("Received Appointment find List Request {} -", appointmentDTO);
         return appointmentService.findAppointmentById(appointmentDTO, locale);
     }
 
-    @PostMapping(value = {EndPoint.CONSULTANT_REQUEST_MGT}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = {EndPoint.APPOINTMENT_CREATE_REQUEST_MGT}, produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
     public ResponseEntity<Object> addAppointment( @Validated({InsertValidation.class})
             @RequestBody AppointmentDTO appointmentDTO, Locale locale) throws Exception {
@@ -90,19 +90,27 @@ public class AppointmentController {
         return appointmentService.saveAppointment(appointmentDTO, locale);
     }
 
-    @PutMapping(value = {EndPoint.CONSULTANT_REQUEST_MGT}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = {EndPoint.APPOINTMENT_REQUEST_MGT}, produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
     public ResponseEntity<Object> updateAppointment(@Validated({ UpdateValidation.class})
             @RequestBody AppointmentDTO appointmentDTO, Locale locale) throws Exception {
-        log.debug("Received Appointment update List Request {} -", appointmentDTO);
+        log.info("Received Appointment update List Request {} -", appointmentDTO);
         return appointmentService.editAppointment(appointmentDTO, locale);
     }
 
-    @DeleteMapping(value = {EndPoint.CONSULTANT_REQUEST_MGT}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = {EndPoint.APPOINTMENT_REQUEST_MGT}, produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
     public ResponseEntity<Object> deleteAppointment(@Validated({ DeleteValidation.class})
             @RequestBody AppointmentDTO appointmentDTO, Locale locale) throws Exception {
-        log.debug("Received Consultant delete List Request {} -", appointmentDTO);
+        log.info("Received Consultant delete List Request {} -", appointmentDTO);
         return appointmentService.deleteAppointment(appointmentDTO, locale);
+    }
+
+    @PostMapping(value = EndPoint.CONSULTANT_SPE_REQUEST_MGT + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> findConsultantBySpecialization(
+            @PathVariable Long id, Locale locale
+    ) throws Exception {
+        log.info("Received Appointment find List Request {} -", id);
+        return appointmentService.findConsultantBySpeId(id, locale);
     }
 }

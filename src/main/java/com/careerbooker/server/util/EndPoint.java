@@ -34,4 +34,13 @@ public class EndPoint {
     public static final String CONSULTANT_DAYS_REQUEST_FIND_CON_DAY = "/v1/admin/find-con-day";
     public static final String CONSULTANT_DAYS_REQUEST_MGT = "/v1/admin";
     public static final String CONSULTANT_DAYS_REQUEST_SEARCH_DATA = "/v1/admin/search-reference-data";
+
+    //    --------------------- Appoinment ---------------------
+    public static final String APPOINTMENT_REQUEST_FILTER_LIST = "/v1/admin/filter-list";
+    public static final String APPOINTMENT_REQUEST_FIND_ID = "/v1/admin/find-id";
+    public static final String APPOINTMENT_REQUEST_MGT = "/v1/admin";
+    public static final String APPOINTMENT_CREATE_REQUEST_MGT = "/v1/admin/schedule";
+    public static final String APPOINTMENT_REQUEST_SEARCH_DATA = "/v1/admin/search-reference-data";
+
+    public static final String CONSULTANT_SPE_REQUEST_MGT = "/v1/admin/consultant-by-specialization";
 }

@@ -26,7 +26,7 @@ public class TimeSlotDTO {
             UpdateValidation.class })
     private Long con_id;
 
-    @NotBlank(message = "Status required", groups = {  InsertValidation.class, UpdateValidation.class })
+    @NotBlank(message = "Status required", groups = {   UpdateValidation.class })
     private String status;
 
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Colombo")
@@ -43,6 +43,7 @@ public class TimeSlotDTO {
     private String createdUser;
 
     private String lastUpdatedUser;
+    private String activeUserName;
 
     private int pageNumber;
     private int pageSize;

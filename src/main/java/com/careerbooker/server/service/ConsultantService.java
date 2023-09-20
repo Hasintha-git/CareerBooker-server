@@ -15,7 +15,8 @@ public interface ConsultantService {
 
     ResponseEntity<Object> saveConsultant(ConsultantsDTO consultantsDTO, Locale locale) throws Exception;
 
-    ResponseEntity<Object> editConsultant(ConsultantsDTO consultantsDTO, Locale locale);
+    ResponseEntity<Object> editConsultant(ConsultantsDTO consultantsDTO, Locale locale) throws Exception ;
 
-    ResponseEntity<Object> deleteConsultant(ConsultantsDTO consultantsDTO, Locale locale);
+    ResponseEntity<Object> deleteConsultant(ConsultantsDTO consultantsDTO, Locale locale) throws Exception ;
+
 }

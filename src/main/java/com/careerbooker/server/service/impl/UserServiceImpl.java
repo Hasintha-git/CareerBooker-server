@@ -219,16 +219,6 @@ public class UserServiceImpl implements UserService {
                                 locale);
             }
 
-            systemUser = Optional.ofNullable(userRepository.findByNicAndStatusNot(userRequestDTO.getNic(), Status.deleted))
-                    .orElse(null);
-
-            if (Objects.nonNull(systemUser)) {
-                return responseGenerator
-                        .generateErrorResponse(userRequestDTO, HttpStatus.CONFLICT,
-                                ResponseCode.ALREADY_EXIST ,  MessageConstant.USER_NIC_ALREADY_EXIST, new Object[] {userRequestDTO.getNic()},
-                                locale);
-            }
-
             UserRole userRole = Optional.ofNullable(userRoleRepository.findByCodeAndStatusCode(userRequestDTO.getUserRole(), Status.active)).orElse(null);
             if (Objects.isNull(userRole)) {
                 return responseGenerator
@@ -297,16 +287,6 @@ public class UserServiceImpl implements UserService {
                 return responseGenerator
                         .generateErrorResponse(userRequestDTO, HttpStatus.CONFLICT,
                                 ResponseCode.ALREADY_EXIST ,  MessageConstant.USER_MOBILE_ALREADY_EXIST, new Object[] {userRequestDTO.getMobileNo()},
-                                locale);
-            }
-
-            systemUser = Optional.ofNullable(userRepository.findByNicAndStatusNotAndIdNot(userRequestDTO.getNic(), Status.deleted, userRequestDTO.getId()))
-                    .orElse(null);
-
-            if (Objects.nonNull(systemUser)) {
-                return responseGenerator
-                        .generateErrorResponse(userRequestDTO, HttpStatus.CONFLICT,
-                                ResponseCode.ALREADY_EXIST ,  MessageConstant.USER_NIC_ALREADY_EXIST, new Object[] {userRequestDTO.getNic()},
                                 locale);
             }
 

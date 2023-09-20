@@ -178,9 +178,17 @@ public class ConsultantServiceImpl implements ConsultantService {
                                 Object[]{consultantsDTO.getUserId()},locale);
             }
 
-            List<Consultants> con = Optional.ofNullable(consultantRepository.findBySystemUserAndStatusNot(user, Status.deleted))
-                    .orElse(null);
-            if (Objects.nonNull(con)) {
+            Long speCount = Optional.ofNullable(consultantRepository.countBySpecializationsAndStatusNot(specializationType, Status.deleted))
+                    .orElse(0L);
+            if (speCount>0) {
+                return responseGenerator.generateErrorResponse(consultantsDTO, HttpStatus.CONFLICT,
+                        ResponseCode.ALREADY_EXIST, MessageConstant.SPECIALIZATION_ALREADY_EXIST, new
+                                Object[]{user.getUsername()},locale);
+            }
+
+            Long conCount = Optional.ofNullable(consultantRepository.countBySystemUserAndStatusNot(user, Status.deleted))
+                    .orElse(0L);
+            if (conCount>0) {
                 return responseGenerator.generateErrorResponse(consultantsDTO, HttpStatus.CONFLICT,
                         ResponseCode.ALREADY_EXIST, MessageConstant.CONSULTANT_ALREADY_EXIST, new
                                 Object[]{user.getUsername()},locale);
@@ -213,7 +221,7 @@ public class ConsultantServiceImpl implements ConsultantService {
 
     @Override
     @Transactional
-    public ResponseEntity<Object> editConsultant(ConsultantsDTO consultantsDTO, Locale locale) {
+    public ResponseEntity<Object> editConsultant(ConsultantsDTO consultantsDTO, Locale locale)  throws Exception {
         try {
             Consultants consultants = Optional.ofNullable(consultantRepository.findByConsultantIdAndStatusNot(consultantsDTO.getCon_id(), Status.deleted)).orElse(null);
 
@@ -266,7 +274,7 @@ public class ConsultantServiceImpl implements ConsultantService {
 
     @Override
     @Transactional
-    public ResponseEntity<Object> deleteConsultant(ConsultantsDTO consultantsDTO, Locale locale) {
+    public ResponseEntity<Object> deleteConsultant(ConsultantsDTO consultantsDTO, Locale locale) throws Exception  {
         try {
             Consultants consultants = Optional.ofNullable(consultantRepository.findByConsultantIdAndStatusNot(consultantsDTO.getCon_id(), Status.deleted)).orElse(null);
 
@@ -290,6 +298,7 @@ public class ConsultantServiceImpl implements ConsultantService {
             throw e;
         }
     }
+
 
 
 }

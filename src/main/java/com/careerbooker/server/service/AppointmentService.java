@@ -1,6 +1,7 @@
 package com.careerbooker.server.service;
 
 import com.careerbooker.server.dto.request.AppointmentDTO;
+import com.careerbooker.server.dto.request.ConsultantsDTO;
 import com.careerbooker.server.dto.request.TimeSlotDTO;
 import org.springframework.http.ResponseEntity;
 
@@ -18,4 +19,6 @@ public interface AppointmentService {
     ResponseEntity<Object> editAppointment(AppointmentDTO appointmentDTO, Locale locale);
 
     ResponseEntity<Object> deleteAppointment(AppointmentDTO appointmentDTO, Locale locale);
+
+    ResponseEntity<Object> findConsultantBySpeId(Long speId, Locale locale) throws Exception ;
 }
