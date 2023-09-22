@@ -44,6 +44,7 @@ public class MessageConstant {
     public static final String CONSULTANT_DAYS_SUCCESSFULLY_DELETE = "val.consultant.days.success.delete";
 
     public static final String APPOINTMENT_ALREADY_EXIST = "val.appointment.already.exist";
+    public static final String APPOINTMENT_NOT_FOUND = "val.appointment.not.found";
     public static final String APPOINTMENT_SUCCESSFULLY_FIND = "val.appointment.success.find";
     public static final String APPOINTMENT_SUCCESSFULLY_SAVE = "val.appointment.success.save";
     public static final String APPOINTMENT_SUCCESSFULLY_UPDATE = "val.appointment.success.update";

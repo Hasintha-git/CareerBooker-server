@@ -7,6 +7,7 @@ import com.careerbooker.server.dto.request.ConsultantsDTO;
 import com.careerbooker.server.dto.request.TimeSlotDTO;
 import com.careerbooker.server.dto.response.AppointmentsResponseDTO;
 import com.careerbooker.server.dto.response.ConsultantResponseDTO;
+import com.careerbooker.server.dto.response.UserResponseDTO;
 import com.careerbooker.server.entity.*;
 import com.careerbooker.server.mapper.DtoToEntityMapper;
 import com.careerbooker.server.mapper.EntityToDtoMapper;
@@ -123,8 +124,35 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<Object> findAppointmentById(AppointmentDTO appointmentDTO, Locale locale) throws Exception {
-        return null;
+        try {
+            Appointments appointments = Optional.ofNullable(appointmentRepository.findAppointmentsByAppointmentIdAndStatusNot(appointmentDTO.getAppointmentId(), Status.deleted)).orElse(
+                    null
+            );
+
+            if (Objects.isNull(appointments)) {
+                return responseGenerator.generateErrorResponse(appointmentDTO, HttpStatus.NOT_FOUND,
+                        ResponseCode.NOT_FOUND, MessageConstant.APPOINTMENT_NOT_FOUND, new
+                                Object[]{appointmentDTO.getAppointmentId()},locale);
+            }
+
+            AppointmentsResponseDTO appointmentsResponseDTO = EntityToDtoMapper.mapAppointment(appointments);
+
+            appointmentsResponseDTO.setCreatedTime(appointments.getCreatedDate());
+            appointmentsResponseDTO.setLastUpdatedTime(appointments.getModifiedDate());
+            appointmentsResponseDTO.setCreatedUser(appointments.getCreatedUser());
+            appointmentsResponseDTO.setLastUpdatedUser(appointments.getModifiedUser());
+            return responseGenerator
+                    .generateSuccessResponse(appointmentDTO, HttpStatus.OK, ResponseCode.APPOINTMENT_GET_SUCCESS,
+                            MessageConstant.SUCCESSFULLY_GET, locale, appointmentsResponseDTO);
+        } catch (EntityNotFoundException ex) {
+            log.info(ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            throw ex;
+        }
     }
 
     @Override

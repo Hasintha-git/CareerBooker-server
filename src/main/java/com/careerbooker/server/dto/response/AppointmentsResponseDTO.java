@@ -21,4 +21,10 @@ public class AppointmentsResponseDTO {
     private String status;
     private String statusDescription;
 
+    private String createdUser;
+    private String lastUpdatedUser;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Colombo")
+    private Date createdTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Colombo")
+    private Date lastUpdatedTime;
 }
