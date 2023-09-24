@@ -6,6 +6,7 @@ public enum ClientStatusEnum
     ACTIVE("active", "Active"),
     INACTIVE("inactive", "Inactive"),
     PENDING("pending", "Pending"),
+    CANCEL("cancel", "Cancel"),
     HOLD("hold", "Hold");
 
 
@@ -33,6 +34,8 @@ public enum ClientStatusEnum
                 return INACTIVE;
             case "pending":
                 return PENDING;
+            case "cancel":
+                return CANCEL;
             case "hold":
                 return HOLD;
             default:

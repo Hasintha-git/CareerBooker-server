@@ -134,7 +134,6 @@ public class ResponseGenerator {
 
         //Setting the common fields of response object
         ErrorResponse errorResponse = requestBean != null ? modelMapper.map(requestBean, ErrorResponse.class) : new ErrorResponse();
-        System.out.println("errorCode>"+errorCode);
         errorResponse.setErrorCode(errorCode);
         errorResponse.setErrorDescription(messageSource.getMessage(errorDescriptionPropertyName, params, language));
         errorResponse.setErrorComponent(errorComponent);

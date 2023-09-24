@@ -10,6 +10,8 @@ public class MessageConstant {
     public static final String USER_ROLE_DELETED = "val.user.role.deleted";
     public static final String USER_ROLE_ALREADY_EXIST = "val.user.role.already.existing";
     public static final String USER_NAME_ALREADY_EXIST = "val.user.name.already.exist";
+    public static final String USER_EXIST_WITH_CONSULTOR = "val.user.name.already.exist.with.consultor";
+    public static final String USER_EXIST_WITH_APPOINTMENT = "val.user.name.already.exist.with.appointment";
     public static final String USER_EMAIL_ALREADY_EXIST = "val.user.email.already.exist";
     public static final String USER_NIC_ALREADY_EXIST = "val.user.nic.already.exist";
     public static final String USER_MOBILE_ALREADY_EXIST = "val.user.mobile.already.exist";
@@ -27,6 +29,7 @@ public class MessageConstant {
     public static final String CONSULTANT_NOT_FOUND = "val.consultant.not.found";
     public static final String CONSULTANT_UNAVAILABLE = "val.consultant.unavailable";
     public static final String CONSULTANT_ALREADY_EXIST = "val.consultant.already.exist";
+    public static final String CONSULTANT_ALREADY_EXIST_WITH_APPOINTMENT = "val.consultant.already.exist.with.appointment";
     public static final String SPECIALIZATION_ALREADY_USED = "val.spec.already.used";
     public static final String CONSULTANT_SUCCESSFULLY_FIND = "val.consultant.success.find";
     public static final String CONSULTANT_SUCCESSFULLY_SAVE = "val.consultant.success.save";
@@ -48,5 +51,6 @@ public class MessageConstant {
     public static final String APPOINTMENT_SUCCESSFULLY_FIND = "val.appointment.success.find";
     public static final String APPOINTMENT_SUCCESSFULLY_SAVE = "val.appointment.success.save";
     public static final String APPOINTMENT_SUCCESSFULLY_UPDATE = "val.appointment.success.update";
+    public static final String APPOINTMENT_SUCCESSFULLY_CANCEL = "val.appointment.success.cancel";
     public static final String APPOINTMENT_SUCCESSFULLY_DELETE = "val.appointment.success.delete";
 }

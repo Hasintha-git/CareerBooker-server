@@ -30,7 +30,7 @@ public class DtoToEntityMapper {
     }
 
     public static void mapSpecialization(SpecializationType specializationType, SpecializationDTO specializationDTO) {
-        specializationType.setStatus(Status.valueOf(specializationDTO.getStatusCode()));
+        specializationType.setStatus(Status.valueOf(specializationDTO.getStatus()));
         specializationType.setName(specializationDTO.getName());
         if (Objects.nonNull(specializationDTO.getId())) {
             specializationType.setSpecializationId(specializationDTO.getId());

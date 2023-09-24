@@ -4,16 +4,11 @@ import com.careerbooker.server.dto.DataTableDTO;
 import com.careerbooker.server.dto.SimpleBaseDTO;
 import com.careerbooker.server.dto.request.ConsultantsDTO;
 import com.careerbooker.server.dto.response.ConsultantResponseDTO;
-import com.careerbooker.server.entity.Consultants;
-import com.careerbooker.server.entity.SpecializationType;
-import com.careerbooker.server.entity.SystemUser;
+import com.careerbooker.server.entity.*;
 import com.careerbooker.server.mapper.DtoToEntityMapper;
 import com.careerbooker.server.mapper.EntityToDtoMapper;
 import com.careerbooker.server.mapper.ResponseGenerator;
-import com.careerbooker.server.repository.ConsultantDaysRepository;
-import com.careerbooker.server.repository.ConsultantRepository;
-import com.careerbooker.server.repository.SpecializationRepository;
-import com.careerbooker.server.repository.UserRepository;
+import com.careerbooker.server.repository.*;
 import com.careerbooker.server.repository.specifications.ConsultantSpecification;
 import com.careerbooker.server.service.ConsultantService;
 import com.careerbooker.server.util.MessageConstant;
@@ -43,11 +38,13 @@ import java.util.stream.Stream;
 public class ConsultantServiceImpl implements ConsultantService {
 
     private ConsultantRepository consultantRepository;
+    private UserRoleRepository userRoleRepository;
     private ConsultantSpecification consultantSpecification;
     private ModelMapper modelMapper;
     private ResponseGenerator responseGenerator;
     private SpecializationRepository specializationRepository;
     private ConsultantDaysRepository consultantDaysRepository;
+    private AppointmentRepository appointmentRepository;
     private UserRepository userRepository;
 
     @Override
@@ -140,6 +137,16 @@ public class ConsultantServiceImpl implements ConsultantService {
             }
 
             ConsultantResponseDTO consultantResponseDTO = EntityToDtoMapper.mapConsultant(consultants);
+            consultantResponseDTO.setCreatedTime(consultants.getCreatedDate());
+            consultantResponseDTO.setLastUpdatedTime(consultants.getModifiedDate());
+            if(Objects.nonNull(consultants.getCreatedDate())) {
+                consultantResponseDTO.setCreatedUser(consultants.getCreatedUser());
+            }
+
+            if(Objects.nonNull(consultants.getModifiedUser())) {
+                consultantResponseDTO.setLastUpdatedUser(consultants.getModifiedUser());
+
+            }
             return responseGenerator
                     .generateSuccessResponse(consultantsDTO, HttpStatus.OK, ResponseCode.CONSULTANT_GET_SUCCESS,
                             MessageConstant.SUCCESSFULLY_GET, locale, consultantResponseDTO);
@@ -200,12 +207,20 @@ public class ConsultantServiceImpl implements ConsultantService {
             Date date = new Date();
             consultants.setCreatedDate(date);
             consultants.setModifiedDate(date);
-            consultants.setModifiedUser(consultantsDTO.getLastUpdatedUser());
-            consultants.setCreatedUser(consultantsDTO.getCreatedUser());
+            consultants.setModifiedUser(consultantsDTO.getActiveUserName());
+            consultants.setCreatedUser(consultantsDTO.getActiveUserName());
             consultants.setSpecializations(specializationType);
             consultants.setSystemUser(user);
 
             consultantRepository.save(consultants);
+
+            UserRole userRole = Optional.ofNullable(userRoleRepository.findByCodeAndStatusCodeNot("consult", Status.deleted)).orElse(null);
+            if(Objects.nonNull(userRole)) {
+                user.setUserRole(userRole);
+                user.setLastUpdatedUser(consultantsDTO.getActiveUserName());
+                user.setLastUpdatedTime(date);
+                userRepository.save(user);
+            }
 
             return responseGenerator
                     .generateSuccessResponse(consultantsDTO, HttpStatus.OK, ResponseCode.CONSULTANT_SAVED_SUCCESS,
@@ -284,9 +299,27 @@ public class ConsultantServiceImpl implements ConsultantService {
                                 Object[]{consultantsDTO.getCon_id()},locale);
             }
 
+            List<ConsultantDays> consultantDayList = Optional.ofNullable(consultantDaysRepository.findAllByConsultant(consultants)).orElse(null);
+
+            if(Objects.nonNull(consultantDayList)) {
+
+                    Long aLong = appointmentRepository.countAllByConsultantDays_ConsultantAndStatusNot(consultants, Status.pending);
+                    if(aLong>0) {
+                        return responseGenerator.generateErrorResponse(consultantsDTO, HttpStatus.CONFLICT,
+                                ResponseCode.ALREADY_EXIST, MessageConstant.CONSULTANT_ALREADY_EXIST_WITH_APPOINTMENT, new
+                                        Object[]{consultantsDTO.getCon_id()},locale);
+                    }
+                consultantDaysRepository.deleteAll(consultantDayList);
+            }
+
+            SystemUser systemUser = consultants.getSystemUser();
+            systemUser.setStatus(Status.deleted);
+            userRepository.save(systemUser);
+
             consultants.setStatus(Status.deleted);
 
             consultantRepository.save(consultants);
+
             return responseGenerator
                     .generateSuccessResponse(consultantsDTO, HttpStatus.OK, ResponseCode.CONSULTANT_DELETE_SUCCESS,
                             MessageConstant.CONSULTANT_SUCCESSFULLY_DELETE, locale, consultantsDTO);

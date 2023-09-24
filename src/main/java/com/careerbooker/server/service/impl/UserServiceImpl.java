@@ -2,16 +2,22 @@ package com.careerbooker.server.service.impl;
 
 import com.careerbooker.server.dto.DataTableDTO;
 import com.careerbooker.server.dto.SimpleBaseDTO;
+import com.careerbooker.server.dto.request.ConsultantsDTO;
 import com.careerbooker.server.dto.request.UserRequestDTO;
 import com.careerbooker.server.dto.response.UserResponseDTO;
+import com.careerbooker.server.entity.Appointments;
+import com.careerbooker.server.entity.Consultants;
 import com.careerbooker.server.entity.SystemUser;
 import com.careerbooker.server.entity.UserRole;
 import com.careerbooker.server.mapper.DtoToEntityMapper;
 import com.careerbooker.server.mapper.EntityToDtoMapper;
 import com.careerbooker.server.mapper.ResponseGenerator;
+import com.careerbooker.server.repository.AppointmentRepository;
+import com.careerbooker.server.repository.ConsultantRepository;
 import com.careerbooker.server.repository.UserRepository;
 import com.careerbooker.server.repository.UserRoleRepository;
 import com.careerbooker.server.repository.specifications.UserSpecification;
+import com.careerbooker.server.service.ConsultantService;
 import com.careerbooker.server.service.UserService;
 import com.careerbooker.server.util.MessageConstant;
 import com.careerbooker.server.util.ResponseCode;
@@ -30,6 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import javax.swing.text.html.Option;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -40,6 +47,11 @@ import java.util.stream.Stream;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+
+    private ConsultantRepository consultantRepository;
+    private ConsultantService consultantService;
+
+    private AppointmentRepository appointmentRepository;
 
     private UserRoleRepository userRoleRepository;
 
@@ -219,13 +231,23 @@ public class UserServiceImpl implements UserService {
                                 locale);
             }
 
-            UserRole userRole = Optional.ofNullable(userRoleRepository.findByCodeAndStatusCode(userRequestDTO.getUserRole(), Status.active)).orElse(null);
-            if (Objects.isNull(userRole)) {
-                return responseGenerator
-                        .generateErrorResponse(userRequestDTO, HttpStatus.NOT_FOUND,
-                                ResponseCode.NOT_FOUND ,  MessageConstant.USER_ROLE_NOT_FOUND,
-                                locale);
+            if (Objects.isNull(userRequestDTO.getUserRole())) {
+                userRequestDTO.setUserRole("seeker");
             }
+
+            UserRole userRole=null;
+            if (Objects.nonNull(userRequestDTO.getUserRole())) {
+                userRole = Optional.ofNullable(userRoleRepository.findByCodeAndStatusCode(userRequestDTO.getUserRole(), Status.active)).orElse(null);
+                if (Objects.isNull(userRole)) {
+                    return responseGenerator
+                            .generateErrorResponse(userRequestDTO, HttpStatus.NOT_FOUND,
+                                    ResponseCode.NOT_FOUND ,  MessageConstant.USER_ROLE_NOT_FOUND,
+                                    locale);
+                }
+            }else {
+                userRole= Optional.ofNullable(userRoleRepository.findByCodeAndStatusCodeNot("seeker", Status.deleted)).orElse(null);
+            }
+
 
             systemUser = Optional.ofNullable(userRepository.findByUsernameAndStatus(userRequestDTO.getNic(), Status.deleted))
                     .orElse(new SystemUser());
@@ -233,12 +255,21 @@ public class UserServiceImpl implements UserService {
 
             Date systemDate = new Date();
             modelMapper.map(userRequestDTO, systemUser);
-            systemUser.setStatus(Status.valueOf(userRequestDTO.getStatus()));
+            if (Objects.nonNull(userRequestDTO.getStatus())) {
+                systemUser.setStatus(Status.valueOf(userRequestDTO.getStatus()));
+            }else {
+                systemUser.setStatus(Status.active);
+            }
             systemUser.setPwStatus(Status.active);
             systemUser.setPasswordExpireDate(systemDate);
+            if (Objects.nonNull(userRequestDTO.getActiveUserName())) {
+                systemUser.setCreatedUser(userRequestDTO.getActiveUserName());
+                systemUser.setLastUpdatedUser(userRequestDTO.getActiveUserName());
+            }else {
+                systemUser.setCreatedUser(userRequestDTO.getUsername());
+                systemUser.setLastUpdatedUser(userRequestDTO.getUsername());
+            }
             systemUser.setCreatedTime(systemDate);
-            systemUser.setCreatedUser(userRequestDTO.getActiveUserName());
-            systemUser.setLastUpdatedUser(userRequestDTO.getActiveUserName());
             systemUser.setLastUpdatedTime(systemDate);
             systemUser.setAttempt(0);
             systemUser.setUserRole(userRole);
@@ -338,6 +369,26 @@ public class UserServiceImpl implements UserService {
                         .generateErrorResponse(userRequestDTO, HttpStatus.CONFLICT,
                                 ResponseCode.NOT_FOUND ,  MessageConstant.USER_NOT_FOUND, new Object[] {userRequestDTO.getUsername()},
                                 locale);
+            }
+
+            if (systemUser.getUserRole().getCode() == "consult") {
+                Consultants consultants = Optional.ofNullable(consultantRepository.findConsultantsBySystemUserAndStatusNot(systemUser, Status.deleted)).orElse(null);
+                if(Objects.nonNull(consultants)) {
+                    return responseGenerator
+                            .generateErrorResponse(userRequestDTO, HttpStatus.CONFLICT,
+                                    ResponseCode.ALREADY_EXIST ,  MessageConstant.USER_EXIST_WITH_CONSULTOR, new Object[] {userRequestDTO.getUsername()},
+                                    locale);
+                }
+            }
+
+            if (systemUser.getUserRole().getCode() == "seeker") {
+                List<Appointments> appointmentsList = Optional.ofNullable(appointmentRepository.findAppointmentsBySystemUserAndStatusNot(systemUser, Status.deleted)).orElse(null);
+                if(Objects.nonNull(appointmentsList)) {
+                    return responseGenerator
+                            .generateErrorResponse(userRequestDTO, HttpStatus.CONFLICT,
+                                    ResponseCode.ALREADY_EXIST ,  MessageConstant.USER_EXIST_WITH_APPOINTMENT, new Object[] {userRequestDTO.getUsername()},
+                                    locale);
+                }
             }
 
             systemUser.setStatus(Status.deleted);

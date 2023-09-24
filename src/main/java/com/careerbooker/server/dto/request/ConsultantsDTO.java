@@ -38,6 +38,7 @@ public class ConsultantsDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Colombo")
     private Date lastUpdatedTime;
 
+    private String activeUserName;
     private String createdUser;
 
     private String lastUpdatedUser;

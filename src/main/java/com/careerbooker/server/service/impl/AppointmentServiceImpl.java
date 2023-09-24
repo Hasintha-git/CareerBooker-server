@@ -166,21 +166,10 @@ public class AppointmentServiceImpl implements AppointmentService {
             Consultants consultants = Optional.ofNullable(consultantRepository
                             .findByConsultantIdAndStatusNot(appointmentDTO.getConsultantId(), Status.deleted))
                             .orElseThrow(() -> new EntityNotFoundException(MessageConstant.CONSULTANT_NOT_FOUND));
-            System.out.println(systemUser);
-            System.out.println(consultants);
-            System.out.println(appointmentDTO.getBookedDate());
             Days days = Optional.ofNullable(dayRepository
                             .findByDay(appointmentDTO.getBookedDate()))
                     .orElseThrow(() -> new EntityNotFoundException(MessageConstant.CONSULTANT_DAYS_UNAVAILABLE));
 
-
-            System.out.println(days);
-            System.out.println(TimeSlot.getTimeSlot(appointmentDTO.getSlotId()));
-
-            System.out.println(">>>>>>>>>>>**********");
-            System.out.println("======"+consultants);
-            System.out.println("======"+days);
-            System.out.println("======"+TimeSlot.getTimeSlot(appointmentDTO.getSlotId()));
             ConsultantDays consultantDays = consultantDaysRepository.findByConsultantAndDaysAndSlotAndStatus(consultants, days, TimeSlot.getTimeSlot(appointmentDTO.getSlotId()), Status.active);
 
             log.info(consultantDays);
@@ -228,6 +217,39 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    public ResponseEntity<Object> cancelAppointment(AppointmentDTO appointmentDTO, Locale locale) {
+        try {
+            Appointments appointments = Optional.ofNullable(appointmentRepository.findAppointmentsByAppointmentIdAndStatusNot(appointmentDTO.getAppointmentId(), Status.deleted)).orElse(
+                    null
+            );
+
+            if (Objects.isNull(appointments)) {
+                return responseGenerator.generateErrorResponse(appointmentDTO, HttpStatus.NOT_FOUND,
+                        ResponseCode.NOT_FOUND, MessageConstant.APPOINTMENT_NOT_FOUND, new
+                                Object[]{appointmentDTO.getAppointmentId()},locale);
+            }
+
+            ConsultantDays consultantDays = appointments.getConsultantDays();
+            consultantDays.setStatus(Status.active);
+            consultantDaysRepository.save(consultantDays);
+
+            appointments.setStatus(Status.cancel);
+
+            appointmentRepository.save(appointments);
+
+            return responseGenerator
+                    .generateSuccessResponse(appointmentDTO, HttpStatus.OK, ResponseCode.APPOINTMENT_CANCEL_SUCCESS,
+                            MessageConstant.APPOINTMENT_SUCCESSFULLY_CANCEL, locale, appointmentDTO);
+        } catch (EntityNotFoundException ex) {
+            log.info(ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            throw ex;
+        }
+    }
+
+    @Override
     @Transactional
     public ResponseEntity<Object> findConsultantBySpeId(Long speId, Locale locale) throws Exception {
         try {
@@ -237,7 +259,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 
             if (Objects.isNull(consultants)) {
 
-                System.out.println(">"+speId+">>"+HttpStatus.NOT_FOUND+">>>"+ ResponseCode.NOT_FOUND+">>>>"+MessageConstant.CONSULTANT_NOT_FOUND);
                 return responseGenerator.generateErrorResponse(null, HttpStatus.NOT_FOUND,
                         ResponseCode.NOT_FOUND, MessageConstant.CONSULTANT_NOT_FOUND, new
                                 Object[]{speId},locale);

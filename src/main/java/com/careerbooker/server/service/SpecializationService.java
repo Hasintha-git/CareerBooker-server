@@ -9,7 +9,7 @@ import java.util.Locale;
 public interface SpecializationService {
 
     Object getReferenceData();
-    ResponseEntity<Object> getSpecializationFilterList(SpecializationDTO specializationDTO, Locale locale) throws Exception;
+    Object getSpecializationFilterList(SpecializationDTO specializationDTO, Locale locale) throws Exception;
 
     ResponseEntity<Object> findSpecializationById(SpecializationDTO specializationDTO, Locale locale) throws Exception;
 

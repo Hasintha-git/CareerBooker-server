@@ -15,6 +15,7 @@ public interface ConsultantRepository extends JpaRepository<Consultants, Long>, 
     List<Consultants> findAllByStatus(Status status);
 
     Consultants findByConsultantIdAndStatusNot(Long consultantId, Status status);
+    Consultants findConsultantsBySystemUserAndStatusNot(SystemUser systemUser, Status status);
     Long countBySpecializationsAndStatusNot(SpecializationType specializationType, Status status);
     Long countBySystemUserAndStatusNot(SystemUser systemUser, Status status);
     Consultants findBySpecializations_SpecializationIdAndStatusNot(Long id, Status status);

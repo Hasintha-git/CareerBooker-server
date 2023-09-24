@@ -146,7 +146,6 @@ public class ConsultantDaysServiceImpl implements ConsultantDaysService {
     @Transactional
     public ResponseEntity<Object> findTimeSlotByConAndDay(TimeSlotDTO timeSlotDTO, Locale locale) throws Exception {
         try {
-            System.out.println(">>>"+timeSlotDTO);
             Consultants consultants = Optional.ofNullable(consultantRepository.findByConsultantIdAndStatusNot
                     (timeSlotDTO.getCon_id(), Status.deleted)).orElse(null);
 

@@ -88,7 +88,6 @@ public class SystemUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        System.out.println("llllllllllllllllll");
         return Collections.singleton(new SimpleGrantedAuthority(userRole.getAuthority()));
     }
 

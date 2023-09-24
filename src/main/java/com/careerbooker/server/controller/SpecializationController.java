@@ -1,6 +1,7 @@
 package com.careerbooker.server.controller;
 
 import com.careerbooker.server.dto.request.SpecializationDTO;
+import com.careerbooker.server.dto.request.SpecializationSearchDTO;
 import com.careerbooker.server.service.SpecializationService;
 import com.careerbooker.server.util.EndPoint;
 import com.careerbooker.server.validators.*;
@@ -14,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Locale;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/specialization")
@@ -29,10 +31,30 @@ public class SpecializationController {
         log.debug("Received Specialization Search Reference Data Request {} -");
         return ResponseEntity.status(HttpStatus.OK).body(specializationService.getReferenceData());
     }
-    @PostMapping(value = {EndPoint.SPECIALIZATION_REQUEST_FILTER_LIST}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = {EndPoint.SPECIALIZATION_REQUEST_FILTER_LIST}, produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
-    public ResponseEntity<Object> getSpecializationFilteredList(@Validated({GetValidation.class})
-            @RequestBody SpecializationDTO specializationDTO, Locale locale) throws Exception {
+    public Object getSpecializationFilteredList(
+            @RequestParam(required = false) Integer start,
+            @RequestParam(required = false) Integer limit,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Boolean full,
+            @RequestParam(required = false) Boolean dataTable,
+            @RequestParam(required = false) Integer draw, Locale locale) throws Exception {
+
+        SpecializationDTO specializationDTO = new SpecializationDTO();
+        SpecializationSearchDTO specializationSearchDTO= new SpecializationSearchDTO();
+        specializationSearchDTO.setName(name);
+        specializationSearchDTO.setStatusCode(status);
+        specializationDTO.setSpecializationSearchDTO(specializationSearchDTO);
+        specializationDTO.setPageNumber(start);
+        specializationDTO.setPageSize(limit);
+        specializationDTO.setSortColumn(sortBy);
+        if (Objects.nonNull(order) && !order.isEmpty()) {
+            specializationDTO.setSortDirection(order.toUpperCase());
+        }
         log.debug("Received Specialization get Filtered List Request {} -", specializationDTO);
         return specializationService.getSpecializationFilterList(specializationDTO, locale);
     }
@@ -61,11 +83,13 @@ public class SpecializationController {
         return specializationService.editSpecialization(specializationDTO, locale);
     }
 
-    @DeleteMapping(value = {EndPoint.SPECIALIZATION_REQUEST_MGT}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = {EndPoint.SPECIALIZATION_REQUEST_MGT+ "/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
     public ResponseEntity<Object> deleteSpecialization(@Validated({ DeleteValidation.class})
-            @RequestBody SpecializationDTO specializationDTO, Locale locale) throws Exception {
-        log.debug("Received Specialization delete List Request {} -", specializationDTO);
+                                                           @PathVariable Long id, Locale locale) throws Exception {
+        log.debug("Received Specialization delete List Request {} -", id);
+        SpecializationDTO specializationDTO= new SpecializationDTO();
+        specializationDTO.setId(id);
         return specializationService.deleteSpecialization(specializationDTO, locale);
     }
 }

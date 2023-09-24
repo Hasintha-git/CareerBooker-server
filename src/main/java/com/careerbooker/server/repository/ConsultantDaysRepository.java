@@ -14,8 +14,8 @@ import java.util.List;
 
 @Repository
 public interface ConsultantDaysRepository extends JpaRepository<ConsultantDays, Long>, JpaSpecificationExecutor<Consultants> {
-    List<Consultants> findAllByStatus(Status status);
-    List<Consultants> findAllByConsultant(Consultants consultants);
+    List<ConsultantDays> findAllByStatus(Status status);
+    List<ConsultantDays> findAllByConsultant(Consultants consultants);
     ConsultantDays findConsultantDaysByIdAndStatus(Long id, Status status);
     List<ConsultantDays> findAllByConsultantAndStatus(Consultants consultants, Status status);
     List<ConsultantDays> findAllByConsultantAndDaysAndStatus(Consultants consultants, Days day, Status status);

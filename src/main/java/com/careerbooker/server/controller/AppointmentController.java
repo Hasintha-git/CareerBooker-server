@@ -107,10 +107,20 @@ public class AppointmentController {
     }
 
     @PostMapping(value = EndPoint.CONSULTANT_SPE_REQUEST_MGT + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin(origins = "*")
     public ResponseEntity<Object> findConsultantBySpecialization(
             @PathVariable Long id, Locale locale
     ) throws Exception {
         log.info("Received Appointment find List Request {} -", id);
         return appointmentService.findConsultantBySpeId(id, locale);
+    }
+
+    @PostMapping(value = {EndPoint.APPOINTMENT_CANCEL_REQUEST_MGT+ "/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<Object> cancelAppointment(@PathVariable Long id, Locale locale) throws Exception {
+        log.info("Received appointment cancel List Request {} -", id);
+        AppointmentDTO appointmentDTO = new AppointmentDTO();
+        appointmentDTO.setAppointmentId(id);
+        return appointmentService.cancelAppointment(appointmentDTO, locale);
     }
 }

@@ -28,7 +28,7 @@ public class ConsultantController {
 
     @GetMapping(value = EndPoint.CONSULTANT_REQUEST_SEARCH_DATA)
     public ResponseEntity<Object> getReferenceData() {
-        log.debug("Received Consultant Search Reference Data Request {} -");
+        log.info("Received Consultant Search Reference Data Request {} -");
         return ResponseEntity.status(HttpStatus.OK).body(consultantService.getReferenceData());
     }
     @GetMapping(value = {EndPoint.CONSULTANT_REQUEST_FILTER_LIST}, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,7 +61,7 @@ public class ConsultantController {
         if (Objects.nonNull(order) && !order.isEmpty()) {
             consultantsDTO.setSortDirection(order.toUpperCase());
         }
-        log.debug("Received Consultant get Filtered List Request {} -", consultantsDTO);
+        log.info("Received Consultant get Filtered List Request {} -", consultantsDTO);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(consultantService.getConsultantFilterList(consultantsDTO, locale));
     }
@@ -70,7 +70,7 @@ public class ConsultantController {
     @CrossOrigin(origins = "*")
     public ResponseEntity<Object> findConsultant(@Validated({ FindValidation.class})
             @RequestBody ConsultantsDTO consultantsDTO, Locale locale) throws Exception {
-        log.debug("Received Consultant find List Request {} -", consultantsDTO);
+        log.info("Received Consultant find List Request {} -", consultantsDTO);
         return consultantService.findConsultantById(consultantsDTO, locale);
     }
 
@@ -78,7 +78,7 @@ public class ConsultantController {
     @CrossOrigin(origins = "*")
     public ResponseEntity<Object> addConsultant( @Validated({InsertValidation.class})
             @RequestBody ConsultantsDTO consultantsDTO, Locale locale) throws Exception {
-        log.debug("Received Consultant add List Request {} -", consultantsDTO);
+        log.info("Received Consultant add List Request {} -", consultantsDTO);
         return consultantService.saveConsultant(consultantsDTO, locale);
     }
 
@@ -86,15 +86,17 @@ public class ConsultantController {
     @CrossOrigin(origins = "*")
     public ResponseEntity<Object> updateConsultant(@Validated({ UpdateValidation.class})
             @RequestBody ConsultantsDTO consultantsDTO, Locale locale) throws Exception {
-        log.debug("Received Consultant update List Request {} -", consultantsDTO);
+        log.info("Received Consultant update List Request {} -", consultantsDTO);
         return consultantService.editConsultant(consultantsDTO, locale);
     }
 
-    @DeleteMapping(value = {EndPoint.CONSULTANT_REQUEST_MGT}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = {EndPoint.CONSULTANT_REQUEST_MGT+ "/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
     public ResponseEntity<Object> deleteConsultant(@Validated({ DeleteValidation.class})
-            @RequestBody ConsultantsDTO consultantsDTO, Locale locale) throws Exception {
-        log.debug("Received Consultant delete List Request {} -", consultantsDTO);
+                                                       @PathVariable Long id, Locale locale) throws Exception {
+        log.info("Received Consultant delete List Request {} -", id);
+        ConsultantsDTO consultantsDTO = new ConsultantsDTO();
+        consultantsDTO.setCon_id(id);
         return consultantService.deleteConsultant(consultantsDTO, locale);
     }
 }

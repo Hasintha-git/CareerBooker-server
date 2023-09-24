@@ -1,5 +1,6 @@
 package com.careerbooker.server.service.impl;
 
+import com.careerbooker.server.dto.DataTableDTO;
 import com.careerbooker.server.dto.SimpleBaseDTO;
 import com.careerbooker.server.dto.request.SpecializationDTO;
 import com.careerbooker.server.dto.request.UserRequestDTO;
@@ -75,7 +76,7 @@ public class SpecializationServiceImpl implements SpecializationService {
 
     @Override
     @Transactional
-    public ResponseEntity<Object> getSpecializationFilterList(SpecializationDTO specializationDTO, Locale locale) throws Exception {
+    public Object getSpecializationFilterList(SpecializationDTO specializationDTO, Locale locale) throws Exception {
         try {
             PageRequest pageRequest;
 
@@ -102,9 +103,10 @@ public class SpecializationServiceImpl implements SpecializationService {
                     .map(faq -> EntityToDtoMapper.mapSpecialization(faq))
                     .collect(Collectors.toList());
 
-            return responseGenerator
-                    .generateSuccessResponse(specializationDTO, HttpStatus.OK, ResponseCode.SPECIALIZATION_GET_SUCCESS
-                            , MessageConstant.SUCCESSFULLY_GET, locale, collect, fullCount);
+            return new DataTableDTO<>(fullCount, (long) collect.size(), collect, null);
+//            return responseGenerator
+//                    .generateSuccessResponse(specializationDTO, HttpStatus.OK, ResponseCode.SPECIALIZATION_GET_SUCCESS
+//                            , MessageConstant.SUCCESSFULLY_GET, locale, collect, fullCount);
 
         } catch (EntityNotFoundException ex) {
             log.info(ex.getMessage());

@@ -35,4 +35,5 @@ public class ResponseCode {
     public static final String APPOINTMENT_SAVED_SUCCESS = "019";
     public static final String APPOINTMENT_UPDATE_SUCCESS = "020";
     public static final String APPOINTMENT_DELETE_SUCCESS = "021";
+    public static final String APPOINTMENT_CANCEL_SUCCESS = "022";
 }

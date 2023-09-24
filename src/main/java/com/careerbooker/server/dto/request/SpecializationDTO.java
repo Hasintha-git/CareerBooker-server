@@ -23,7 +23,7 @@ public class SpecializationDTO {
     private String name;
 
     @NotBlank(message = "Status required", groups = {  InsertValidation.class, UpdateValidation.class })
-    private String statusCode;
+    private String status;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Colombo")
     private Date createdTime;

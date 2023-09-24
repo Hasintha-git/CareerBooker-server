@@ -25,7 +25,7 @@ public class UserRequestDTO {
     @NotBlank(message = "Password required", groups = {  InsertValidation.class })
     private String password;
 
-    @NotBlank(message = "User role required", groups = {  InsertValidation.class, UpdateValidation.class })
+//    @NotBlank(message = "User role required", groups = {  InsertValidation.class, UpdateValidation.class })
     private String userRole;
 
     @NotBlank(message = "Full name required", groups = {  InsertValidation.class, UpdateValidation.class })
@@ -48,7 +48,7 @@ public class UserRequestDTO {
     @NotBlank(message = "City required", groups = {  InsertValidation.class, UpdateValidation.class })
     private String city;
 
-    @NotBlank(message = "Status required", groups = {  InsertValidation.class, UpdateValidation.class })
+//    @NotBlank(message = "Status required", groups = {  InsertValidation.class, UpdateValidation.class })
     private String status;
 
     private String pwStatus;
@@ -70,7 +70,7 @@ public class UserRequestDTO {
 
     private String lastUpdatedUser;
 
-    @NotBlank(message = "Active User name required", groups = {  InsertValidation.class, UpdateValidation.class })
+//    @NotBlank(message = "Active User name required", groups = {  InsertValidation.class, UpdateValidation.class })
     private String activeUserName;
 
     private int pageNumber;

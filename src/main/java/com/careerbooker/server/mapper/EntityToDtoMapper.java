@@ -69,6 +69,14 @@ public class EntityToDtoMapper {
         responseDTO.setStatusDescription(ClientStatusEnum.getEnum(String.valueOf(specializationType.getStatus())).getDescription());
         responseDTO.setName(specializationType.getName());
         responseDTO.setId(specializationType.getSpecializationId());
+        if(Objects.nonNull(specializationType.getCreatedUser())) {
+            responseDTO.setCreatedUser(specializationType.getCreatedUser());
+        }
+        if(Objects.nonNull(specializationType.getModifiedUser())) {
+            responseDTO.setLastUpdatedUser(specializationType.getModifiedUser());
+        }
+        responseDTO.setCreatedTime(specializationType.getCreatedDate());
+        responseDTO.setLastUpdatedTime(specializationType.getModifiedDate());
         return responseDTO;
     }
 
@@ -92,7 +100,7 @@ public class EntityToDtoMapper {
         ConsultantResponseDTO responseDTO = new ConsultantResponseDTO();
         responseDTO.setStatus(String.valueOf(consultants.getStatus()));
         responseDTO.setStatusDescription(ClientStatusEnum.getEnum(String.valueOf(consultants.getStatus())).getDescription());
-        responseDTO.setId(consultants.getConsultantId());
+        responseDTO.setCon_id(consultants.getConsultantId());
         responseDTO.setSpe_id(consultants.getSpecializations().getSpecializationId());
         responseDTO.setSpeDescription(consultants.getSpecializations().getName());
         if (Objects.nonNull(consultants.getSystemUser())) {
