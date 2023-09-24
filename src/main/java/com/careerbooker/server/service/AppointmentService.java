@@ -16,9 +16,6 @@ public interface AppointmentService {
 
     ResponseEntity<Object> saveAppointment(AppointmentDTO appointmentDTO, Locale locale) throws Exception;
 
-    ResponseEntity<Object> editAppointment(AppointmentDTO appointmentDTO, Locale locale);
-
-    ResponseEntity<Object> deleteAppointment(AppointmentDTO appointmentDTO, Locale locale);
     ResponseEntity<Object> cancelAppointment(AppointmentDTO appointmentDTO, Locale locale);
 
     ResponseEntity<Object> findConsultantBySpeId(Long speId, Locale locale) throws Exception ;

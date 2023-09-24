@@ -370,8 +370,7 @@ public class UserServiceImpl implements UserService {
                                 ResponseCode.NOT_FOUND ,  MessageConstant.USER_NOT_FOUND, new Object[] {userRequestDTO.getUsername()},
                                 locale);
             }
-
-            if (systemUser.getUserRole().getCode() == "consult") {
+            if ("consult".equals(systemUser.getUserRole().getCode())) {
                 Consultants consultants = Optional.ofNullable(consultantRepository.findConsultantsBySystemUserAndStatusNot(systemUser, Status.deleted)).orElse(null);
                 if(Objects.nonNull(consultants)) {
                     return responseGenerator
@@ -380,9 +379,9 @@ public class UserServiceImpl implements UserService {
                                     locale);
                 }
             }
-
-            if (systemUser.getUserRole().getCode() == "seeker") {
-                List<Appointments> appointmentsList = Optional.ofNullable(appointmentRepository.findAppointmentsBySystemUserAndStatusNot(systemUser, Status.deleted)).orElse(null);
+            if ("seeker".equals(systemUser.getUserRole().getCode())){
+                System.out.println("hit2");
+                List<Appointments> appointmentsList = Optional.ofNullable(appointmentRepository.findAllBySystemUserAndStatusNot(systemUser, Status.deleted)).orElse(null);
                 if(Objects.nonNull(appointmentsList)) {
                     return responseGenerator
                             .generateErrorResponse(userRequestDTO, HttpStatus.CONFLICT,

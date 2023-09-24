@@ -66,7 +66,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 
             List<SimpleBaseDTO> timeSlotList = Stream.of(TimeSlot.values()).map(statusEnum -> new SimpleBaseDTO(statusEnum.getCode(), statusEnum.getDescription())).collect(Collectors.toList());
 
-
             //set data
             refData.put("statusList", defaultStatus);
             refData.put("specializationList", simpleBaseDTOList);
@@ -204,16 +203,6 @@ public class AppointmentServiceImpl implements AppointmentService {
             log.error(e.getMessage());
             throw e;
         }
-    }
-
-    @Override
-    public ResponseEntity<Object> editAppointment(AppointmentDTO appointmentDTO, Locale locale) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<Object> deleteAppointment(AppointmentDTO appointmentDTO, Locale locale) {
-        return null;
     }
 
     @Override

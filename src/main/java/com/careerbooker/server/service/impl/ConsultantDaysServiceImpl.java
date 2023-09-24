@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -37,7 +36,6 @@ public class ConsultantDaysServiceImpl implements ConsultantDaysService {
     private ConsultantRepository consultantRepository;
     private ConsultantDaysRepository consultantDaysRepository;
     private DayRepository dayRepository;
-    private ModelMapper modelMapper;
     private ResponseGenerator responseGenerator;
 
     @Override

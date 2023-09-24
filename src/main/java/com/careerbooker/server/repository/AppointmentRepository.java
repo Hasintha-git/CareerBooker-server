@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointments, Long>, JpaSpecificationExecutor<Appointments> {
     Appointments findAppointmentsByAppointmentIdAndStatusNot(Long id, Status status);
-    List<Appointments> findAppointmentsBySystemUserAndStatusNot(SystemUser systemUser, Status status);
+    List<Appointments> findAllBySystemUserAndStatusNot(SystemUser systemUser, Status status);
     Long countAllByConsultantDays_ConsultantAndStatusNot(Consultants consultant, Status status);
     Long countAllByStatus(Status status);
 

@@ -103,11 +103,13 @@ public class UserController {
         return userService.editUser(userRequestDTO, locale);
     }
 
-    @DeleteMapping(value = {EndPoint.USER_REQUEST_MGT}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = {EndPoint.USER_REQUEST_MGT+ "/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*")
     public ResponseEntity<Object> deleteUser(@Validated({ DeleteValidation.class})
-            @RequestBody UserRequestDTO userRequestDTO, Locale locale) throws Exception {
-        log.debug("Received User delete List Request {} -", userRequestDTO);
+                                                 @PathVariable Long id, Locale locale) throws Exception {
+        log.debug("Received User delete List Request {} -", id);
+        UserRequestDTO userRequestDTO=new UserRequestDTO();
+        userRequestDTO.setId(id);
         return userService.deleteUser(userRequestDTO, locale);
     }
 }
